@@ -1,0 +1,17 @@
+{
+  "name": "backend",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy --minify"
+  },
+  "dependencies": {
+    "hono": "^4.6.13"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20241112.0",
+    "@types/node": "^22.10.1",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.7.2",
+    "wrangler": "^3.88.0"
+  }
+}
