@@ -1,5 +1,6 @@
 'use client'
 
+import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
 export default function SignUp() {
@@ -7,6 +8,7 @@ export default function SignUp() {
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [error, setError] = useState('')
+  const router = useRouter()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -20,6 +22,7 @@ export default function SignUp() {
     try {
       console.log('サインアップ:', email, password)
       // TODO: サインアップ処理を実装する
+      router.push('/login')
     } catch (err) {
       console.error(err)
       setError('サインアップに失敗しました。もう一度お試しください。')
