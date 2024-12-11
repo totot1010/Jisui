@@ -140,13 +140,13 @@ export default function Profile() {
         </div>
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-2xl font-bold">投稿一覧</h2>
-          <Link
-            href="/upload"
+          <button
+            onClick={() => setDialogOpen(true)}
             className="bg-black text-white px-4 py-2 rounded-full hover:bg-gray-800 transition-colors duration-200 flex items-center"
           >
             <PenSquare size={18} className="mr-2" />
             投稿する
-          </Link>
+          </button>
         </div>
         <div className="space-y-8">
           {userPosts.map(post => (
