@@ -1,4 +1,4 @@
-import SignUp from "@/feature/auth/components/signup";
+import SignUp from "@/feature/auth/components/Signup";
 
 export default async function Page() {
   return <SignUp />
