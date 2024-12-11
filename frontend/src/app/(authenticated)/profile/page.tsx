@@ -117,10 +117,10 @@ export default function Profile() {
             </div>
             <Link
               href="/profile/edit"
-              className="absolute top-0 right-0 bg-black text-white px-3 py-1 rounded-full hover:bg-gray-800 transition-colors duration-200 flex items-center text-sm"
+              className="absolute top-0 right-0 bg-black text-white px-4 py-2 rounded-full hover:bg-gray-800 transition-colors duration-200 flex items-center text-sm"
             >
               <Edit size={16} className="mr-1" />
-              編集
+              プロフィールを編集
             </Link>
           </div>
           <div className="grid grid-cols-2 gap-4 mb-6">
