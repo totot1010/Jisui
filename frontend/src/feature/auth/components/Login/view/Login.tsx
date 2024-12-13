@@ -1,29 +1,22 @@
 'use client'
 
-import { useState } from 'react'
+import { Input } from '@/components/shadcn/input'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
 
-export default function Login() {
-  const [userId, setUserId] = useState('')
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [error, setError] = useState('')
-  const router = useRouter()
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setError('')
+type LoginViewProps = {
+  userId: string
+  email: string
+  password: string
+  error: string
+  setUserId: (userId: string) => void
+  setEmail: (email: string) => void
+  setPassword: (password: string) => void
+  handleSubmit: (e: React.FormEvent) => void
+}
 
-    try {
-      // TODO: ログイン処理を実装する
-      console.log('ログイン:', email, password)
-      router.push('/home')
-    } catch (err) {
-      console.error(err)
-      setError('ログインに失敗しました。メールアドレスとパスワードを確認してください。')
-    }
-  }
-
+export default function LoginView(
+  { userId, email, password, error, setUserId, setEmail, setPassword, handleSubmit }: LoginViewProps
+) {
   return (
     <div className="bg-white p-8 rounded-lg shadow-md w-96">
       <h1 className="text-2xl font-bold mb-6 text-center">ログイン</h1>
@@ -33,41 +26,33 @@ export default function Login() {
           <label htmlFor="userId" className="block text-sm font-medium text-gray-700 mb-1">
             ユーザーID
           </label>
-          <input
-            type="text"
-            id="userId"
-            value={userId}
-            onChange={(e) => setUserId(e.target.value)}
-            required
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="example@example.com"
-          />
+          <Input type="text" id="userId" className="px-3 py-2" value={userId} onChange={(e) => setUserId(e.target.value)} required />
         </div>
         <div>
           <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
             メールアドレス
           </label>
-          <input
+          <Input
             type="email"
             id="email"
+            className="px-3 py-2"
             value={email}
+            placeholder="example@example.com"
             onChange={(e) => setEmail(e.target.value)}
             required
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="example@example.com"
           />
         </div>
         <div>
           <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
             パスワード
           </label>
-          <input
+          <Input
             type="password"
             id="password"
+            className="px-3 py-2"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="••••••••"
           />
         </div>
