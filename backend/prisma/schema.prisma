@@ -37,6 +37,17 @@ model Post {
   userId    String
   likes     PostLike[]
   comments  PostComment[]
+  images    PostImage[]
+}
+
+// 投稿に対する画像
+model PostImage {
+  id        String   @id @default(cuid())
+  url       String
+  createAt  DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  post      Post     @relation(fields: [postId], references: [id])
+  postId    String
 }
 
 // 投稿に対するいいね
