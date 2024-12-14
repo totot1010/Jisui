@@ -11,7 +11,7 @@ export class Username {
       throw new Error('ユーザー名は3文字以上にしてください');
     }
 
-    if (value.length <= 50) {
+    if (value.length >= 50) {
       throw new Error('ユーザー名は50文字以下にしてください');
     }
   }
