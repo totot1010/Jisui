@@ -10,7 +10,8 @@ export class HashedPassword {
     return this.__value;
   }
 
-  public static  hash(rawPassword: RawPassword): HashedPassword {
+  public static hash(rawPassword: RawPassword): HashedPassword {
+    // TODO: パスワードをハッシュ化する処理を実装
     return new HashedPassword(rawPassword.value);
   }
 
