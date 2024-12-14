@@ -2,7 +2,10 @@
   "name": "backend",
   "scripts": {
     "dev": "wrangler dev",
-    "deploy": "wrangler deploy --minify"
+    "deploy": "wrangler deploy --minify",
+    "prisma:studio": "prisma studio",
+    "prisma:migrate:dev": "prisma migrate dev --name ${npm_config_name}",
+    "prisma:format": "prisma format"
   },
   "dependencies": {
     "@prisma/client": "^6.0.1",
