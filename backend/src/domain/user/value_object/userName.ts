@@ -1,4 +1,4 @@
-class Username {
+export class Username {
   private readonly value: string;
 
   constructor(value: string) {
