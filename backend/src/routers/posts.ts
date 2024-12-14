@@ -6,11 +6,11 @@ post.post("/", (c) => {
   return c.json({ message: "post created" }, 200);
 });
 
-post.post("/like", (c) => {
+post.post("/likes", (c) => {
   return c.json({ message: "post liked" }, 200);
 });
 
-post.post("/comment", (c) => {
+post.post("/comments", (c) => {
   return c.json({ message: "comment created" }, 200);
 });
 
