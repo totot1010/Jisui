@@ -1,4 +1,5 @@
 export * from './email';
-export * from './password';
+export * from './hashedPassword';
+export * from './rawPassword';
 export * from './userId';
 export * from './username';

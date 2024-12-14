@@ -1,4 +1,4 @@
-export class Password {
+export class RawPassword {
   private readonly __value: string;
 
   constructor(value: string) {
@@ -16,12 +16,4 @@ export class Password {
     return this.__value;
   }
 
-  public static hash(rawPassword: string) {
-    // TODO: ハッシュ化処理を実装
-  }
-
-  public equals(value: string) {
-    // TODO: ハッシュ化されたパスワードを比較する処理を実装
-    return this.__value === value;
-  }
 }
