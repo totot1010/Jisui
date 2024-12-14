@@ -1,9 +1,9 @@
 export class Email {
-  private readonly email: string;
+  private readonly __email: string;
 
   constructor(email: string) {
     this.__validate(email);
-    this.email = email;
+    this.__email = email;
   }
 
   private __validate(email: string) {
@@ -16,7 +16,7 @@ export class Email {
     }
   }
 
-  public getEmail(): string {
-    return this.email;
+  get value(): string {
+    return this.__email;
   }
 }

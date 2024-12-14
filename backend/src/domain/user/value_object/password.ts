@@ -1,9 +1,9 @@
 export class Password {
-  private readonly value: string;
+  private readonly __value: string;
 
   constructor(value: string) {
     this.__validate(value);
-    this.value = value;
+    this.__value = value;
   }
 
   private __validate(value: string) {
@@ -12,8 +12,8 @@ export class Password {
     }
   }
 
-  public getValue(): string {
-    return this.value;
+  get value(): string {
+    return this.__value;
   }
 
   public static hash(rawPassword: string) {
@@ -22,6 +22,6 @@ export class Password {
 
   public equals(value: string) {
     // TODO: ハッシュ化されたパスワードを比較する処理を実装
-    return this.value === value;
+    return this.__value === value;
   }
 }

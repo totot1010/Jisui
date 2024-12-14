@@ -1,9 +1,9 @@
 export class Username {
-  private readonly value: string;
+  private readonly __value: string;
 
   constructor(value: string) {
     this.__validate(value);
-    this.value = value;
+    this.__value = value;
   }
 
   private __validate(value: string) {
@@ -16,7 +16,7 @@ export class Username {
     }
   }
 
-  public getValue(): string {
-    return this.value;
+  get value(): string {
+    return this.__value;
   }
 }

@@ -8,32 +8,32 @@ export class User {
   private readonly password: Password;
 
   constructor(
-    userId: string,
-    username: string,
-    email: string,
-    password: string
+    userId: UserId,
+    username: Username,
+    email: Email,
+    password: Password
   ) {
-    this.userId = new UserId(userId);
-    this.username = new Username(username);
-    this.email = new Email(email);
-    this.password = new Password(password);
+    this.userId = userId;
+    this.username = username;
+    this.email = email;
+    this.password = password;
   }
 
   // getter
-  public getUserId(): string {
-    return this.userId.value;
+  public getUserId(): UserId {
+    return this.userId;
   }
 
-  public getUsername(): string {
-    return this.username.getValue();
+  public getUsername(): Username {
+    return this.username;
   }
 
-  public getEmail(): string {
-    return this.email.getEmail();
+  public getEmail(): Email {
+    return this.email;
   }
 
-  public getPassword(): string {
-    return this.password.getValue();
+  public getPassword(): Password {
+    return this.password;
   }
 
 }
