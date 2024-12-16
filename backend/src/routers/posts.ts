@@ -14,6 +14,11 @@ post.post("/comments", (c) => {
   return c.json({ message: "comment created" }, 200);
 });
 
+// みんなの投稿
+post.get("/", (c) => {
+  return c.json({ message: `post with id ` }, 200);
+});
+
 post.get("/:id", (c) => {
   const id = c.req.param('id')
   return c.json({ message: `post with id ${id}` }, 200);
