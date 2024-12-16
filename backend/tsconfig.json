@@ -1,16 +1,15 @@
 {
   "compilerOptions": {
-    "module": "esnext",
-    "moduleResolution": "bundler",
+    "module": "CommonJS",
+    "moduleResolution": "node",
     "strict": true,
-    "verbatimModuleSyntax": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
     "allowJs": true,
-    "types": [
-      "node"
-    ],
+    "types": ["node"],
     "jsx": "react-jsx",
     "jsxImportSource": "hono/jsx",
+    "sourceMap": true,
+    "outDir": "./dist"
   }
 }
