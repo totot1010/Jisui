@@ -1,8 +1,8 @@
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { logger } from 'hono/logger';
+import { serve } from '@hono/node-server';
 import { prettyJSON } from 'hono/pretty-json';
-
 import auth from './routers/auth'
 import user from './routers/users'
 import post from './routers/posts'
@@ -27,4 +27,9 @@ app.notFound((c) => {
   return c.json('Not Found', 404)
 });
 
-export default app;
+console.log(`Server is running on http://localhost:8787`);
+
+serve({
+  fetch: app.fetch,
+  port: 8787,
+})
