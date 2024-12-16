@@ -12,7 +12,7 @@ export class UserCreateService {
     const password = new RawPassword(crateUserDto.password);
     const email = new Email(crateUserDto.email);
 
-    const hashedPassword = HashedPassword.hash(password);
+    const hashedPassword = await HashedPassword.hash(password);
 
     const user = new User(userId, username, email, hashedPassword);
 

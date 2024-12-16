@@ -23,7 +23,7 @@ user.post("/", async (c) => {
       email: user.getEmail().value,
       username: user.getUsername().value,
     }
-   }, 200);
+  }, 200);
 });
 
 user.get("/:id", (c) => {
