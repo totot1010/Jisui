@@ -6,7 +6,9 @@
     "start": "node ./dist/index.js",
     "prisma:studio": "prisma studio",
     "prisma:migrate:dev": "prisma migrate dev --name ${npm_config_name}",
-    "prisma:format": "prisma format"
+    "prisma:format": "prisma format",
+    "prisma:generate": "prisma generate",
+    "prisma:seed": "prisma db seed"
   },
   "dependencies": {
     "@hono/node-server": "^1.13.7",
@@ -25,6 +27,7 @@
     "wrangler": "^3.88.0"
   },
   "prisma": {
-    "schema": "src/infrastructure/prisma/schema.prisma"
+    "schema": "src/infrastructure/prisma/schema.prisma",
+    "seed": "tsx src/infrastructure/prisma/seed.ts"
   }
 }
