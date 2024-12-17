@@ -47,4 +47,12 @@ export class UserRepository implements IUserRepository {
 
     return User.reConstruct(user.id, user.username, user.email, user.password);
   }
+
+  async findAll(): Promise<User[]> {
+    const users = await this.prisma.user.findMany();
+
+    return users.map(user => {
+      return User.reConstruct(user.id, user.username, user.email, user.password);
+    });
+  }
 }
