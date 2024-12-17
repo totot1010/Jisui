@@ -1,13 +1,14 @@
 import { User } from "@/feature/auth/types"
 
 export type Post = {
-  id: string
+  postId: string
   title: string
   price: number
-  likes: number
-  comments: Comment[]
-  user: {
-    id: User['id']
-    username: User['username']
-  }
+  userId: User['id']
+  username: User['username']
+  createdAt: Date
+  updatedAt: Date
+  // likes: number
+  // comments: Comment[]
+
 }
