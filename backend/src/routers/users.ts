@@ -2,13 +2,22 @@ import { Hono } from "hono";
 import { CreateUserRequestDto } from "../application/user/dto/createUser.dto";
 import { UserRepository } from "../infrastructure/repository/user.repository";
 import { UserCreateService } from "../application/user/service/userCreate.service";
+import { CheckUserDuplicationDomainService } from "../domain/user/service/checkUserDuplication.domainService";
+import { UserDuplicationError } from "../domain/user/exceptions/userDuplicationError";
 
 const user = new Hono();
+user.onError((error: any, c) => {
+  if (error instanceof UserDuplicationError) {
+    return c.json({ message: error.message }, 400);
+  }
+  return c.json({ message: error.message }, 500);
+});
 
 const userRepository = new UserRepository();
+const checkUserDuplicationDomainService = new CheckUserDuplicationDomainService(userRepository);
 
 user.post("/", async (c) => {
-  const userCreateService = new UserCreateService(userRepository);
+  const userCreateService = new UserCreateService(userRepository, checkUserDuplicationDomainService);
 
   const body = await c.req.json();
   const { email, username, password } = body;

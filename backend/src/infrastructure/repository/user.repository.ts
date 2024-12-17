@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { type IUserRepository } from "../../domain/user/repository/user.repository";
 import { User } from "../../domain/user/entity/user.entity";
+import { Email } from "../../domain/user/value_object";
 
 
 export class UserRepository implements IUserRepository {
@@ -19,10 +20,10 @@ export class UserRepository implements IUserRepository {
     return User.reConstruct(id, username, email, password);
   }
 
-  async findByEmail(email: string): Promise<User | null> {
+  async findByEmail(email: Email): Promise<User | null> {
     const user = await this.prisma.user.findUnique({
       where: {
-        email: email
+        email: email.value
       }
     });
 
