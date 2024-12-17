@@ -1,6 +1,16 @@
 import { Hono } from "hono";
+import { UserRepository } from "../infrastructure/repository/user.repository";
+import { PostRepository } from "../infrastructure/repository/post.repository";
+import { PostQueryService } from "../application/post/service/postQuery.service";
+import { UserQueryService } from "../application/user/service/userQuery.service";
+import { GetAllPostWithUserService } from "../application/query/service/getAllPostWithUser.service";
 
 const post = new Hono();
+const userRepository = new UserRepository();
+const postRepository = new PostRepository();
+
+const postQueryService = new PostQueryService(postRepository);
+const userQueryService = new UserQueryService(userRepository);
 
 post.post("/", (c) => {
   return c.json({ message: "post created" }, 200);
@@ -12,6 +22,13 @@ post.post("/likes", (c) => {
 
 post.post("/comments", (c) => {
   return c.json({ message: "comment created" }, 200);
+});
+
+// みんなの投稿
+post.get("/", async (c) => {
+  const getAllPostWithUserService = new GetAllPostWithUserService(postQueryService, userQueryService);
+  const results = await getAllPostWithUserService.execute();
+  return c.json(results, 200);
 });
 
 post.get("/:id", (c) => {
