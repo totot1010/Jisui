@@ -10,5 +10,4 @@ export type Post = {
   updatedAt: Date
   // likes: number
   // comments: Comment[]
-
 }
