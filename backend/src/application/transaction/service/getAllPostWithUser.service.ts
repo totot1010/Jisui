@@ -1,3 +1,5 @@
+import { Post } from "../../../domain/post/entity/post.entity";
+import { User } from "../../../domain/user/entity/user.entity";
 import { PostQueryService } from "../../post/service/postQuery.service";
 import { UserQueryService } from "../../user/service/UserQuery.service";
 import { getAllPostWithUserDto } from "../dto/getAllPostWithUser.dto";
@@ -9,8 +11,8 @@ export class GetAllPostWithUserService {
   ) { }
 
   public async execute(): Promise<getAllPostWithUserDto[]> {
-    const posts = await this.postQueryService.findAll();
-    const users = await this.userQueryService.findAll();
+    const posts: Post[] = await this.postQueryService.findAll();
+    const users: User[] = await this.userQueryService.findAll();
 
     const result: getAllPostWithUserDto[] = [];
 
