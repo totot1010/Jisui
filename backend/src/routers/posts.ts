@@ -3,7 +3,7 @@ import { UserRepository } from "../infrastructure/repository/user.repository";
 import { PostRepository } from "../infrastructure/repository/post.repository";
 import { PostQueryService } from "../application/post/service/postQuery.service";
 import { UserQueryService } from "../application/user/service/userQuery.service";
-import { GetAllPostWithUserService } from "../application/transaction/service/getAllPostWithUser.service";
+import { GetAllPostWithUserService } from "../application/query/service/getAllPostWithUser.service";
 
 const post = new Hono();
 const userRepository = new UserRepository();
