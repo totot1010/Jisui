@@ -1,7 +1,7 @@
 import { Post } from "../../../domain/post/entity/post.entity";
 import { User } from "../../../domain/user/entity/user.entity";
 import { PostQueryService } from "../../post/service/postQuery.service";
-import { UserQueryService } from "../../user/service/UserQuery.service";
+import { UserQueryService } from "../../user/service/userQuery.service";
 import { getAllPostWithUserDto } from "../dto/getAllPostWithUser.dto";
 
 export class GetAllPostWithUserService {
