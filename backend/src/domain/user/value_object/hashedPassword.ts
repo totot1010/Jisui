@@ -19,8 +19,7 @@ export class HashedPassword {
     return new HashedPassword(hashedPassword);
   }
 
-  public equals(hashedPassword: HashedPassword) {
-    // TODO: ハッシュ化されたパスワードを比較する処理を実装
-    return this.value === hashedPassword.value;
+  public async compare(rawPassword: RawPassword): Promise<boolean> {
+    return await bcrypt.compare(rawPassword.value, this.__value);
   }
 }

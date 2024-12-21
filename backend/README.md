@@ -1,6 +1,16 @@
 ## バックエンド環境構築手順
 
 ### 1. パッケージのインストール
+env.exampleをコピーして.envファイルを作成してください
+```bash
+cp .env.example .env
+```
+
+乱数を生成し、secretに値を入れてください、例ではopenSSLを使用しています
+```bash
+openssl rand -base64 32
+```
+
 ```
 npm install
 npm run dev
