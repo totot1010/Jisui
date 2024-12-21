@@ -4,7 +4,7 @@ import { useState } from "react"
 import SignUpView from "./view/Signup"
 
 export default function Signup() {
-  const [userId, setUserId] = useState("")
+  const [username, setUsername] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
@@ -21,8 +21,15 @@ export default function Signup() {
     }
 
     try {
-      console.log("サインアップ:", email, password)
-      // TODO: サインアップ処理を実装する
+      const options = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email, password, username })
+      }
+      const response = await fetch('http://localhost:8787/api/v1/users', options);
+      await response.json();
       router.push("/login")
     } catch (err) {
       console.error(err)
@@ -32,8 +39,8 @@ export default function Signup() {
 
   return (
     <SignUpView
-      userId={userId}
-      setUserId={setUserId}
+      username={username}
+      setUsername={setUsername}
       email={email}
       setEmail={setEmail}
       password={password}

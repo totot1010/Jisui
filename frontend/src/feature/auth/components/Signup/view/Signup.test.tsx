@@ -5,8 +5,8 @@ import SignupView from './Signup';
 
 describe('SignupView', () => {
   const defaultProps = {
-    userId: '',
-    setUserId: vi.fn(),
+    username: '',
+    setUsername: vi.fn(),
     email: '',
     setEmail: vi.fn(),
     password: '',
@@ -30,10 +30,10 @@ describe('SignupView', () => {
     expect(errorMessage).toBeInTheDocument();
   });
 
-  it('ユーザーID入力フォームが表示されること', () => {
+  it('ユーザー名入力フォームが表示されること', () => {
     render(<SignupView {...defaultProps} />);
-    const userIdInput = screen.getByLabelText('ユーザーID');
-    expect(userIdInput).toBeInTheDocument();
+    const usernameInput = screen.getByLabelText('ユーザー名');
+    expect(usernameInput).toBeInTheDocument();
   });
 
   it('メールアドレス入力フォームが表示されること', () => {
@@ -60,12 +60,12 @@ describe('SignupView', () => {
     expect(signupButton).toBeInTheDocument();
   });
 
-  it('ユーザーID入力フォームに入力された値がsetUserIdに渡されること', () => {
-    const setUserId = vi.fn();
-    render(<SignupView {...defaultProps} setUserId={setUserId} />);
-    const userIdInput = screen.getByLabelText('ユーザーID');
-    fireEvent.change(userIdInput, { target: { value: 'test' } });
-    expect(setUserId).toHaveBeenCalledWith('test');
+  it('ユーザー名入力フォームに入力された値がsetUsernameに渡されること', () => {
+    const setUsername = vi.fn();
+    render(<SignupView {...defaultProps} setUsername={setUsername} />);
+    const usernameInput = screen.getByLabelText('ユーザー名');
+    fireEvent.change(usernameInput, { target: { value: 'test' } });
+    expect(setUsername).toHaveBeenCalledWith('test');
   });
 
   it('メールアドレス入力フォームに入力された値がsetEmailに渡されること', () => {
@@ -103,7 +103,7 @@ describe('SignupView', () => {
 
   it('入力があればサインアップボタンがクリックされた時にonSubmitが呼ばれること', () => {
     const onSubmit = vi.fn(e => e.preventDefault());
-    render(<SignupView {...defaultProps} onSubmit={onSubmit} userId='test' email='a@a.com' password='password' confirmPassword='password' />);
+    render(<SignupView {...defaultProps} onSubmit={onSubmit} username='test' email='a@a.com' password='password' confirmPassword='password' />);
     const signupButton = screen.getByRole('button', { name: 'サインアップ' });
     fireEvent.click(signupButton);
     expect(onSubmit).toHaveBeenCalled();
