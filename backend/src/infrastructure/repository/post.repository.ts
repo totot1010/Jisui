@@ -1,13 +1,12 @@
-import { PrismaClient } from "@prisma/client";
 import { IPostRepository } from "../../domain/post/repository/post.repository";
 import { Post } from "../../domain/post/entity/post.entity";
+import { prisma } from "../prisma/prisma";
 
 
 export class PostRepository implements IPostRepository {
-  private prisma = new PrismaClient();
 
   async findAll(): Promise<Post[]> {
-    const posts = await this.prisma.post.findMany(
+    const posts = await prisma.post.findMany(
       { orderBy: { createAt: 'desc' } }
     );
 

@@ -2,7 +2,7 @@ import bcrypt from 'bcrypt';
 
 import { type IUserRepository } from "../../domain/user/repository/user.repository";
 import { User } from "../../domain/user/entity/user.entity";
-import { Email } from "../../domain/user/value_object";
+import { Email, UserId } from "../../domain/user/value_object";
 
 
 export class UserFakeRepository implements IUserRepository {
@@ -26,14 +26,14 @@ export class UserFakeRepository implements IUserRepository {
     return User.reConstruct(userId, username, email.value, hashedPassword);
   }
 
-  async findById(userId: string): Promise<User | null> {
+  async findById(userId: UserId): Promise<User | null> {
     const username = 'username';
     const RawPassword = 'password';
     const email = 'aaa@aaa.com';
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(RawPassword, salt);
 
-    return User.reConstruct(userId, username, email, hashedPassword);
+    return User.reConstruct(userId.value, username, email, hashedPassword);
   }
 
   async findAll(): Promise<User[]> {

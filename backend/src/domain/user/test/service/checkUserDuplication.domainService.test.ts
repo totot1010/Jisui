@@ -29,6 +29,7 @@ describe('checkUserDuplicationDomainService', () => {
   it('既にユーザーが登録されているとエラーになること', async () => {
     // given
     const email = new Email('test@example.com');
+    userFakeRepository.findByEmail = vi.fn().mockResolvedValue(true);
 
     // when
     let error
