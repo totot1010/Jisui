@@ -2,6 +2,9 @@
 import { useRouter } from "next/navigation"
 import { useState } from "react"
 import SignUpView from "./view/Signup"
+import { CreateUserRequestDto } from "../../types/dtos/createUserRequestDto"
+import { fetchData } from "@/api/api"
+import { User } from "../../types"
 
 export default function Signup() {
   const [username, setUsername] = useState("")
@@ -21,15 +24,12 @@ export default function Signup() {
     }
 
     try {
-      const options = {
+      const requestBody: CreateUserRequestDto = { email, password, username };
+      const options: RequestInit = {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ email, password, username })
+        body: JSON.stringify(requestBody),
       }
-      const response = await fetch('http://localhost:8787/api/v1/users', options);
-      await response.json();
+      await fetchData<User>('users', options);
       router.push("/login")
     } catch (err) {
       console.error(err)
