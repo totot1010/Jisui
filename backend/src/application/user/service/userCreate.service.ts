@@ -10,6 +10,7 @@ export class UserCreateService {
     private readonly checkUserDuplicationDomainService: CheckUserDuplicationDomainService
   ) { }
 
+  // Test Created
   async create(crateUserDto: CreateUserRequestDto): Promise<User> {
     const userId = UserId.generate();
     const username = new Username(crateUserDto.username);

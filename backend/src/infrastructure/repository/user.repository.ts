@@ -1,14 +1,13 @@
-import { PrismaClient } from "@prisma/client";
 import { type IUserRepository } from "../../domain/user/repository/user.repository";
 import { User } from "../../domain/user/entity/user.entity";
-import { Email } from "../../domain/user/value_object";
+import { Email, UserId } from "../../domain/user/value_object";
+import { prisma } from "../prisma/prisma";
 
 
 export class UserRepository implements IUserRepository {
-  private prisma = new PrismaClient();
 
   async create(user: User): Promise<User> {
-    const { id, email, username, password } = await this.prisma.user.create({
+    const { id, email, username, password } = await prisma.user.create({
       data: {
         id: user.getUserId().value,
         email: user.getEmail().value,
@@ -21,7 +20,7 @@ export class UserRepository implements IUserRepository {
   }
 
   async findByEmail(email: Email): Promise<User | null> {
-    const user = await this.prisma.user.findUnique({
+    const user = await prisma.user.findUnique({
       where: {
         email: email.value
       }
@@ -34,10 +33,10 @@ export class UserRepository implements IUserRepository {
     return User.reConstruct(user.id, user.username, user.email, user.password);
   }
 
-  async findById(userId: string): Promise<User | null> {
-    const user = await this.prisma.user.findUnique({
+  async findById(userId: UserId): Promise<User | null> {
+    const user = await prisma.user.findUnique({
       where: {
-        id: userId
+        id: userId.value
       }
     });
 
@@ -49,7 +48,7 @@ export class UserRepository implements IUserRepository {
   }
 
   async findAll(): Promise<User[]> {
-    const users = await this.prisma.user.findMany();
+    const users = await prisma.user.findMany();
 
     return users.map(user => {
       return User.reConstruct(user.id, user.username, user.email, user.password);
