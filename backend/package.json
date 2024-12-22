@@ -7,7 +7,6 @@
     "test": "dotenv -e .env.test -- prisma migrate dev --skip-seed && dotenv -e .env.test -- vitest",
     "prisma:studio": "prisma studio",
     "prisma:migrate:dev": "prisma migrate dev --name ${npm_config_name}",
-    "prisma:migrate:test:reset": "dotenv -e .env.test -- prisma migrate reset --force --skip-seed",
     "prisma:format": "prisma format",
     "prisma:generate": "prisma generate",
     "prisma:seed": "prisma db seed"
