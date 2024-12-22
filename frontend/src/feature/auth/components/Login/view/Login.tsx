@@ -4,30 +4,22 @@ import { Input } from '@/components/shadcn/input'
 import Link from 'next/link'
 
 type LoginViewProps = {
-  userId: string
   email: string
   password: string
   error: string
-  setUserId: (userId: string) => void
   setEmail: (email: string) => void
   setPassword: (password: string) => void
   handleSubmit: (e: React.FormEvent) => void
 }
 
 export default function LoginView(
-  { userId, email, password, error, setUserId, setEmail, setPassword, handleSubmit }: LoginViewProps
+  { email, password, error, setEmail, setPassword, handleSubmit }: LoginViewProps
 ) {
   return (
     <div className="bg-white p-8 rounded-lg shadow-md w-96">
       <h1 className="text-2xl font-bold mb-6 text-center">ログイン</h1>
       {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
       <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label htmlFor="userId" className="block text-sm font-medium text-gray-700 mb-1">
-            ユーザーID
-          </label>
-          <Input type="text" id="userId" className="px-3 py-2" value={userId} onChange={(e) => setUserId(e.target.value)} required />
-        </div>
         <div>
           <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
             メールアドレス
