@@ -15,15 +15,10 @@ describe('checkUserDuplicationDomainService', () => {
     userFakeRepository.findByEmail = vi.fn().mockResolvedValue(null);
 
     // when
-    let error;
-    try {
-      await checkUserDuplicationDomainService.execute(email);
-    } catch (e: any) {
-      error = e;
-    }
+    const result =  await checkUserDuplicationDomainService.execute(email);
 
     // then
-    expect(error).toBeUndefined();
+    expect(result).toBeUndefined();
   });
 
   it('既にユーザーが登録されているとエラーになること', async () => {
@@ -31,16 +26,9 @@ describe('checkUserDuplicationDomainService', () => {
     const email = new Email('test@example.com');
     userFakeRepository.findByEmail = vi.fn().mockResolvedValue(true);
 
-    // when
-    let error
-    try {
-      await checkUserDuplicationDomainService.execute(email);
-    } catch (e: any) {
-      error = e;
-    }
-
-    // then
-    expect(error).toBeInstanceOf(UserDuplicationError);
-    expect(error.message).toBe('ユーザーが既に存在します');
+    // when & then
+      await expect(checkUserDuplicationDomainService.execute(email)).rejects.toThrowError(
+        new UserDuplicationError('ユーザーが既に存在します')
+      );
   });
 });

@@ -4,6 +4,7 @@ import { CheckUserDuplicationDomainService } from '../../../../domain/user/servi
 import { CreateUserRequestDto } from '../../dto/createUser.dto';
 import { UserFakeRepository } from '../../../../infrastructure/repository/user.fakeRepository';
 import { UserDuplicationError } from '../../../../domain/user/exceptions/userDuplicationError';
+import { User } from '../../../../domain/user/entity/user.entity';
 
 
 describe('UserCreateService', () => {
@@ -24,7 +25,7 @@ describe('UserCreateService', () => {
     const result = await userCreateService.create(createUserDto);
 
     // then
-    expect(result).toBeTruthy();
+    expect(result).toBeInstanceOf(User);
   });
 
   it('既にユーザーが存在する場合はエラーが出ること', async () => {
@@ -38,16 +39,9 @@ describe('UserCreateService', () => {
     const password = 'password123';
     const createUserDto = new CreateUserRequestDto(email, username, password);
 
-    // when
-    let error
-    try {
-      await userCreateService.create(createUserDto)
-    } catch (e: any) {
-      error = e;
-    }
-
-    // then
-    expect(error).toBeInstanceOf(UserDuplicationError);
-    expect(error.message).toBe('ユーザーが既に存在します');
+    // when & then
+    await expect(userCreateService.create(createUserDto)).rejects.toThrowError(
+      new UserDuplicationError('ユーザーが既に存在します')
+    );
   });
 });
