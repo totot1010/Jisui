@@ -5,8 +5,6 @@ import LoginView from './Login';
 
 describe('LoginView', () => {
   const defaultProps = {
-    userId: '',
-    setUserId: vi.fn(),
     email: '',
     setEmail: vi.fn(),
     password: '',
@@ -28,12 +26,6 @@ describe('LoginView', () => {
     expect(errorMessage).toBeInTheDocument();
   });
 
-  it('ユーザーID入力フォームが表示されること', () => {
-    render(<LoginView {...defaultProps} />);
-    const userIdInput = screen.getByLabelText('ユーザーID');
-    expect(userIdInput).toBeInTheDocument();
-  });
-
   it('メールアドレス入力フォームが表示されること', () => {
     render(<LoginView {...defaultProps} />);
     const emailInput = screen.getByLabelText('メールアドレス');
@@ -49,14 +41,6 @@ describe('LoginView', () => {
     render(<LoginView {...defaultProps} />);
     const signupButton = screen.getByRole('button', { name: 'ログイン' });
     expect(signupButton).toBeInTheDocument();
-  });
-
-  it('ユーザーID入力フォームに入力された値がsetUserIdに渡されること', () => {
-    const setUserId = vi.fn();
-    render(<LoginView {...defaultProps} setUserId={setUserId} />);
-    const userIdInput = screen.getByLabelText('ユーザーID');
-    fireEvent.change(userIdInput, { target: { value: 'test' } });
-    expect(setUserId).toHaveBeenCalledWith('test');
   });
 
   it('メールアドレス入力フォームに入力された値がsetEmailに渡されること', () => {
@@ -86,7 +70,7 @@ describe('LoginView', () => {
 
   it('入力があればログインボタンがクリックされた時にonSubmitが呼ばれること', () => {
     const onSubmit = vi.fn(e => e.preventDefault());
-    render(<LoginView {...defaultProps} handleSubmit={onSubmit} userId='test' email='a@a.com' password='password'  />);
+    render(<LoginView {...defaultProps} handleSubmit={onSubmit} email='a@a.com' password='password'  />);
     const signupButton = screen.getByRole('button', { name: 'ログイン' });
     fireEvent.click(signupButton);
     expect(onSubmit).toHaveBeenCalled();
