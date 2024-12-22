@@ -1,7 +1,7 @@
 import { login } from '@/feature/auth/actions/login';
 import { useState } from 'react';
 
-export function useLogin() {
+export const useLogin = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
