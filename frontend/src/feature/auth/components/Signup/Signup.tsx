@@ -1,10 +1,14 @@
 "use client"
+
 import { useRouter } from "next/navigation"
 import { useState } from "react"
 import SignUpView from "./view/Signup"
+import { CreateUserRequestDto } from "../../types/dtos";
+import { createUser } from "../../actions/createUser";
+import { isApiError } from "@/api/api";
 
 export default function Signup() {
-  const [userId, setUserId] = useState("")
+  const [username, setUsername] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
@@ -17,23 +21,22 @@ export default function Signup() {
 
     if (password !== confirmPassword) {
       setError("パスワードが一致しません")
-      return
+      return;
     }
+      const data: CreateUserRequestDto = { email, password, username };
 
-    try {
-      console.log("サインアップ:", email, password)
-      // TODO: サインアップ処理を実装する
+      const response = await createUser(data);
+      if(isApiError(response)) {
+        setError(response.message)
+        return;
+      }
       router.push("/login")
-    } catch (err) {
-      console.error(err)
-      setError("サインアップに失敗しました。もう一度お試しください。")
-    }
   }
 
   return (
     <SignUpView
-      userId={userId}
-      setUserId={setUserId}
+      username={username}
+      setUsername={setUsername}
       email={email}
       setEmail={setEmail}
       password={password}
