@@ -12,8 +12,6 @@ export class UserId {
   }
 
   public static generate(): UserId {
-    // TODO: ユーザーIDを生成する処理を実装
     return new UserId(uuidv4());
   }
-
 };
