@@ -1,12 +1,10 @@
-"use client"
-
 import { Button } from "@/components/shadcn/button"
 import { Input } from "@/components/shadcn/input"
 import Link from "next/link"
 
 type SignUpViewProps = {
-  userId: string
-  setUserId: (userId: string) => void
+  username: string
+  setUsername: (username: string) => void
   email: string
   setEmail: (email: string) => void
   password: string
@@ -19,8 +17,8 @@ type SignUpViewProps = {
 
 
 export default function SignupView(
-  { userId,
-    setUserId,
+  { username,
+    setUsername,
     email,
     setEmail,
     password,
@@ -38,10 +36,10 @@ export default function SignupView(
       {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
       <form onSubmit={onSubmit} className="space-y-4">
         <div>
-          <label htmlFor="userId" className="block text-sm font-medium text-gray-700 mb-1">
-            ユーザーID
+          <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-1">
+            ユーザー名
           </label>
-          <Input type="text" id="userId" className="px-3 py-2" value={userId} onChange={(e) => setUserId(e.target.value)} required />
+          <Input type="text" id="username" className="px-3 py-2" value={username} onChange={(e) => setUsername(e.target.value)} required />
         </div>
         <div>
           <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
