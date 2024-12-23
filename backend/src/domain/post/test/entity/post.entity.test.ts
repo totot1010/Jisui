@@ -5,13 +5,15 @@ import { Post } from "../../entity/post.entity";
 
 describe('PostEntity', () => {
   it('インスタンス生成できること', () => {
-    // when
+    // given
     const postId = PostId.generate();
     const title = new Title('title');
     const price = new Price(1000);
     const userId = UserId.generate();
     const createAt = new Date();
     const updatedAt = new Date();
+
+    // when
     const post = new Post(postId, title, price, userId, createAt, updatedAt);
 
     // then

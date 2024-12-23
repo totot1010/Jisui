@@ -5,6 +5,19 @@ import { prisma } from "../prisma/prisma";
 
 export class PostRepository implements IPostRepository {
 
+  async create(post: Post): Promise<Post> {
+    const { id, title, price, userId, createAt, updatedAt } = await prisma.post.create({
+      data: {
+        id: post.getPostId().value,
+        title: post.getTitle().value,
+        price: post.getPrice().value,
+        userId: post.getUserId().value,
+      }
+    });
+
+    return Post.reConstruct(id, title, price, userId, createAt, updatedAt);
+  }
+
   async findAll(): Promise<Post[]> {
     const posts = await prisma.post.findMany(
       { orderBy: { createAt: 'desc' } }
