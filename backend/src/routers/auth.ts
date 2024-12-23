@@ -36,7 +36,7 @@ auth.post("/refresh", async (c) => {
   // 'Bearer 'の部分を除去してリフレッシュトークンを取得
   const refreshToken = authHeader.slice(7);
   const accessToken = await loginService.refresh(refreshToken);
-  return c.json(accessToken, 200);
+  return c.json({accessToken: accessToken}, 200);
 }).onError((error: any, c) => {
   if (error instanceof Error) {
     console.error(error);
