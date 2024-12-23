@@ -37,13 +37,24 @@ export class UserFakeRepository implements IUserRepository {
   }
 
   async findAll(): Promise<User[]> {
-    const userId = 'userId';
-    const username = 'username';
-    const RawPassword = 'password';
-    const email = 'aaa@aaa.com';
     const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(RawPassword, salt);
 
-    return [User.reConstruct(userId, username, email, hashedPassword)];
+    const hashedPassword1 = await bcrypt.hash("aaabbbccc123", salt);
+    const user1 = User.reConstruct(
+      UserId.generate().value,
+      'user1',
+      'aaa@aaa.com',
+      hashedPassword1
+    )
+
+    const hashedPassword2 = await bcrypt.hash("dddeeefff123", salt);
+    const user2 = User.reConstruct(
+      UserId.generate().value,
+      'user2',
+      'bbb@bbb.com',
+      hashedPassword2
+    )
+
+    return [user1, user2];
   }
 }
