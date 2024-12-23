@@ -60,5 +60,4 @@ export class TokenService {
       { expiresIn: "7d" } // 有効期限7日
     );
   }
-
 }
