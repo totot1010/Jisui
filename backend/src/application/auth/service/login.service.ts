@@ -32,4 +32,9 @@ export class LoginService {
     const { accessToken, refreshToken } = await this.tokenService.generateTokens(user.getUserId().value);
     return new LoginResponseDto(accessToken, refreshToken, user.getUserId().value, user.getUsername().value);
   }
+
+  async refresh(refreshToken: string): Promise<string> {
+    const accessToken = await this.tokenService.refreshAccessToken(refreshToken);
+    return accessToken;
+  }
 }

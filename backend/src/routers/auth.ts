@@ -20,17 +20,29 @@ auth.post("/login", async (c) => {
 
   const loginResponse = await loginService.login(loginRequestDto);
   return c.json(loginResponse, 200);
-})
-  .onError((error: any, c) => {
-    if (error instanceof Error) {
-      console.error(error);
-      return c.json({ message: "ログインに失敗しました" }, 400);
-    }
-    return c.json({ message: "" }, 500);
-  });
+}).onError((error: any, c) => {
+  if (error instanceof Error) {
+    console.error(error);
+    return c.json({ message: "ログインに失敗しました" }, 400);
+  }
+  return c.json({ message: "" }, 500);
+});
 
-auth.post("/logout", (c) => {
-  return c.json({ message: "Logout success" }, 200);
+auth.post("/refresh", async (c) => {
+  const authHeader = c.req.header('Authorization');
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return c.json({ message: "リフレッシュトークンがありません" }, 401);
+  }
+  // 'Bearer 'の部分を除去してリフレッシュトークンを取得
+  const refreshToken = authHeader.slice(7);
+  const accessToken = await loginService.refresh(refreshToken);
+  return c.json(accessToken, 200);
+}).onError((error: any, c) => {
+  if (error instanceof Error) {
+    console.error(error);
+    return c.json({ message: "再度ログインしてください" }, 401);
+  }
+  return c.json({ message: "" }, 500);
 });
 
 
