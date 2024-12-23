@@ -15,7 +15,7 @@ user.onError((error: any, c) => {
   if (error instanceof HTTPException) {
     return error.getResponse();
   }
-  throw new HTTPException(500);
+  return c.json({ message: "Internal Server Error" }, 500);
 });
 
 const userRepository = new UserRepository();
