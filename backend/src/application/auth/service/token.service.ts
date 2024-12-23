@@ -15,7 +15,7 @@ export class TokenService {
     return { accessToken, refreshToken };
   }
 
-  async verifyToken(token: string): Promise<string> {
+  public static async verifyToken(token: string): Promise<string> {
     try {
       const decoded = jwt.verify(token, ACCESS_TOKEN_SECRET) as jwt.JwtPayload;
 
@@ -34,7 +34,7 @@ export class TokenService {
   }
 
 
-  async refreshAccessToken(refreshToken: string): Promise<string> {
+  public async refreshAccessToken(refreshToken: string): Promise<string> {
     const decoded = jwt.verify(refreshToken, REFRESH_TOKEN_SECRET) as jwt.JwtPayload;
 
     if (typeof decoded.sub !== "string") {
