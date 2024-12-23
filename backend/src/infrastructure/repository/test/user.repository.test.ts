@@ -61,7 +61,6 @@ describe('userRepository', async () => {
 
     // when
     const result = await userRepository.findById(new UserId(userId));
-    console.log('result', result);
 
     // then
     expect(result).toBeTruthy();
@@ -70,15 +69,29 @@ describe('userRepository', async () => {
   it('全ユーザーを取得できること', async () => {
     // given
     const user = User.reConstruct(userId, username, email, hashedPassword);
+
+    const userId2 = UserId.generate().value;
+    const username2 = 'bbb'
+    const email2 = 'bbb@bbb.com'
     const hashedPassword2 = await bcrypt.hash('password2', salt);
-    const user2 = User.reConstruct(UserId.generate().value, "bbb", "bbb@bbb.com", hashedPassword2);
+    const user2 = User.reConstruct(userId2, username2, email2, hashedPassword2);
+
     await userRepository.create(user);
     await userRepository.create(user2);
 
     // when
     const result = await userRepository.findAll();
 
+    const [result1, result2] = result;
     // then
-    expect(result.length).toBe(2);
+    expect(result).toHaveLength(2);
+    expect(result1.getUserId().value).toBe(userId);
+    expect(result1.getUsername().value).toBe(username);
+    expect(result1.getEmail().value).toBe(email);
+    expect(result1.getHashedPassword().value).toBe(hashedPassword);
+    expect(result2.getUserId().value).toBe(userId2);
+    expect(result2.getUsername().value).toBe(username2);
+    expect(result2.getEmail().value).toBe(email2);
+    expect(result2.getHashedPassword().value).toBe(hashedPassword2);
   })
 });
