@@ -1,16 +1,21 @@
 import { Hono } from "hono";
+import { HTTPException } from "hono/http-exception";
 import { CreateUserRequestDto } from "../application/user/dto/createUser.dto";
 import { UserRepository } from "../infrastructure/repository/user.repository";
 import { UserCreateService } from "../application/user/service/userCreate.service";
 import { CheckUserDuplicationDomainService } from "../domain/user/service/checkUserDuplication.domainService";
 import { UserDuplicationError } from "../domain/user/exceptions/userDuplicationError";
+import { requiredAuth } from "./middleware";
 
 const user = new Hono().basePath("/users");
 user.onError((error: any, c) => {
   if (error instanceof UserDuplicationError) {
     return c.json({ message: error.message }, 400);
   }
-  return c.json({ message: error.message }, 500);
+  if (error instanceof HTTPException) {
+    return error.getResponse();
+  }
+  throw new HTTPException(500);
 });
 
 const userRepository = new UserRepository();
@@ -34,6 +39,9 @@ user.post("/", async (c) => {
     }
   }, 200);
 });
+
+// ここから下は認証が必要
+user.use(requiredAuth);
 
 user.get("/:id", (c) => {
   const id = c.req.param('id')
