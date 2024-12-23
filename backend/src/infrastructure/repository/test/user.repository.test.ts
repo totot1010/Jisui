@@ -61,7 +61,6 @@ describe('userRepository', async () => {
 
     // when
     const result = await userRepository.findById(new UserId(userId));
-    console.log('result', result);
 
     // then
     expect(result).toBeTruthy();
