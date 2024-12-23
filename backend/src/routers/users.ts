@@ -5,7 +5,7 @@ import { UserCreateService } from "../application/user/service/userCreate.servic
 import { CheckUserDuplicationDomainService } from "../domain/user/service/checkUserDuplication.domainService";
 import { UserDuplicationError } from "../domain/user/exceptions/userDuplicationError";
 
-const user = new Hono();
+const user = new Hono().basePath("/users");
 user.onError((error: any, c) => {
   if (error instanceof UserDuplicationError) {
     return c.json({ message: error.message }, 400);
