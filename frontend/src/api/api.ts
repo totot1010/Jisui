@@ -1,3 +1,5 @@
+import { cookies } from "next/headers";
+
 export type ApiError = {
 	type: "error";
 	status: string;
@@ -19,26 +21,30 @@ export const ApiClient = () => {
 	const Get = async <RequestType = undefined, ResponseType = unknown>(
 		path: string,
 		params?: RequestType,
+		auth: boolean = true,
 	): Promise<ApiResponse<ResponseType>> => {
 		// paramsをクエリパラメータに変換
 		const queryString = params ? requestToUrlSearch(params).toString() : "";
 		// クエリパラメータがあればURLに追加
 		const requestUrl = queryString ? `${path}?${queryString}` : path;
 
-		return request(requestUrl, "GET", params);
+		return request(requestUrl, "GET", params, auth);
 	};
 	const Post = <RequestType = undefined, ResponseType = unknown>(
 		path: string,
 		params?: RequestType,
-	): Promise<ApiResponse<ResponseType>> => request(path, "POST", params);
+		auth: boolean = true,
+	): Promise<ApiResponse<ResponseType>> => request(path, "POST", params, auth);
 	const Put = <RequestType = undefined, ResponseType = unknown>(
 		path: string,
 		params?: RequestType,
-	): Promise<ApiResponse<ResponseType>> => request(path, "PUT", params);
+		auth: boolean = true,
+	): Promise<ApiResponse<ResponseType>> => request(path, "PUT", params,auth);
 	const Delete = <RequestType = undefined, ResponseType = unknown>(
 		path: string,
 		params?: RequestType,
-	): Promise<ApiResponse<ResponseType>> => request(path, "DELETE", params);
+		auth: boolean = true,
+	): Promise<ApiResponse<ResponseType>> => request(path, "DELETE", params,auth);
 
 	return {
 		Get,
@@ -68,7 +74,19 @@ const request = async <RequestType = undefined, ResponseType = unknown>(
 	path: string,
 	method: string,
 	params?: RequestType,
+	auth: boolean = true,
 ): Promise<ApiResponse<ResponseType>> => {
+	const cookieStore = await cookies();
+	const accessToken = cookieStore.get("accessToken")?.value;
+
+	if (auth && !accessToken) {
+		return {
+			type: "error",
+			status: "401",
+			message: "Unauthorized",
+		};
+	}
+
 	const settings = {
 		BaseUrl: process.env.API_ENDPOINT,
 	};
@@ -79,6 +97,7 @@ const request = async <RequestType = undefined, ResponseType = unknown>(
 		mode: "cors",
 		headers: {
 			"Content-Type": "application/json",
+			"Authorization": auth ? `Bearer ${accessToken}` : "",
 		},
 		body: params ? JSON.stringify(params) : undefined,
 	};

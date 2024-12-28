@@ -6,7 +6,7 @@ import { ApiClient, ApiError, isApiError } from "@/api/api";
 import { LoginRequestDto, LoginResponseDto } from "../types/dtos";
 
 export const login = async (request: LoginRequestDto): Promise<ApiError | void> => {
-  const response = await ApiClient().Post<LoginRequestDto, LoginResponseDto>('auth/login', request);
+  const response = await ApiClient().Post<LoginRequestDto, LoginResponseDto>('auth/login', request, false);
 
   if (isApiError(response)) {
     return response;
