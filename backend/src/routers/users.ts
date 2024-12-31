@@ -8,6 +8,7 @@ import { UserDuplicationError } from "../domain/user/exceptions/userDuplicationE
 import { requiredAuth } from "./middleware";
 import { UpdateUserRequestDto } from "../application/user/dto/updateUser.dto";
 import { UserUpdateService } from "../application/user/service/userUpdate.service";
+import { ValidationError } from "../shared/exceptions/validationError";
 
 // c.getで取得するパラメータの型
 type Variables = {
@@ -16,8 +17,8 @@ type Variables = {
 
 const user = new Hono<{ Variables: Variables }>().basePath("/users");
 user.onError((error: any, c) => {
-  if (error instanceof UserDuplicationError) {
-    return c.json({ message: error.message }, 400);
+  if (error instanceof UserDuplicationError || error instanceof ValidationError) {
+    return c.json({ message: String(error.message) }, 400);
   }
   if (error instanceof HTTPException) {
     return error.getResponse();
