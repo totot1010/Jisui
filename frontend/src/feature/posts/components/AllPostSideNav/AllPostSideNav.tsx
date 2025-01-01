@@ -2,32 +2,95 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { PenSquare, User } from "lucide-react";
+import { LogOut, PenSquare, User } from "lucide-react";
+
+import { Button } from "@/components/shadcn/button"
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/shadcn/dialog"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/shadcn/tooltip"
+
 import { CreatePostDialog } from "../CreatePostDialog";
+import { logout } from "@/feature/auth/actions/logout";
 
 export const AllPostSideNav = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
+
+  const handleLogout = async () => {
+    console.log('ログアウト処理を実行')
+    await logout()
+  }
   return (
     <>
       <div className="w-16 flex flex-col items-center space-y-4 fixed left-4 top-1/2 transform -translate-y-1/2 z-10">
-        <div className="relative group">
-          <button onClick={() => setDialogOpen(true)} className="bg-primary-500 text-black p-3 rounded-full hover:bg-primary-600 transition-colors duration-200 shadow-lg flex items-center justify-center w-12 h-12" data-testid="create-post-button">
-            <PenSquare size={24} />
-            <span className="sr-only">料理を投稿</span>
-          </button>
-          <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-full mb-2 px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-20">
-            料理を投稿
-          </div>
-        </div>
-        <div className="relative group">
-          <Link href="/profile" className="bg-secondary-200 p-3 rounded-full hover:bg-secondary-300 transition-colors duration-200 shadow-lg flex items-center justify-center w-12 h-12">
-            <User size={24} />
-            <span className="sr-only">マイページ</span>
-          </Link>
-          <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-full mb-2 px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-20">
-            マイページ
-          </div>
-        </div>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button variant="outline" size="icon" className="rounded-full w-12 h-12" onClick={() => setDialogOpen(true)}>
+                  <PenSquare className="h-5 w-5" />
+                  <span className="sr-only">料理を投稿</span>
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent side="right">
+              <p>料理を投稿</p>
+            </TooltipContent>
+          </Tooltip>
+
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button variant="outline" size="icon" className="rounded-full w-12 h-12" asChild>
+                <Link href="/profile">
+                  <User className="h-5 w-5" />
+                  <span className="sr-only">マイページ</span>
+                </Link>
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent side="right">
+              <p>マイページ</p>
+            </TooltipContent>
+          </Tooltip>
+
+          <Dialog>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <DialogTrigger asChild>
+                  <Button variant="outline" size="icon" className="rounded-full w-12 h-12">
+                    <LogOut className="h-5 w-5" />
+                    <span className="sr-only">ログアウト</span>
+                  </Button>
+                </DialogTrigger>
+              </TooltipTrigger>
+              <TooltipContent side="right">
+                <p>ログアウト</p>
+              </TooltipContent>
+            </Tooltip>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>ログアウトの確認</DialogTitle>
+                <DialogDescription>
+                  本当にログアウトしますか？
+                </DialogDescription>
+              </DialogHeader>
+              <DialogFooter>
+              <DialogClose asChild>
+                <Button variant="outline">
+                  キャンセル
+                </Button>
+              </DialogClose>
+                <Button variant="destructive" onClick={handleLogout}>
+                  ログアウト
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        </TooltipProvider>
       </div>
       <CreatePostDialog open={dialogOpen} onClose={() => setDialogOpen(false)} />
     </>
