@@ -7,7 +7,6 @@ import { HTTPException } from 'hono/http-exception';
 import auth from './routers/auth'
 import user from './routers/users'
 import post from './routers/posts'
-import { requiredAuth } from './routers/middleware';
 
 const app = new Hono().basePath('/api/v1');
 app.use(prettyJSON());

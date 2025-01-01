@@ -94,4 +94,25 @@ describe('userRepository', async () => {
     expect(result2.getEmail().value).toBe(email2);
     expect(result2.getHashedPassword().value).toBe(hashedPassword2);
   })
+
+  it('ユーザーが更新できること', async () => {
+    // given
+    const user = User.reConstruct(userId, username, email, hashedPassword);
+    await userRepository.create(user);
+
+    const newEmail = 'email@email.com';
+    const newUsername = 'newUsername';
+    const newPassword = 'newPassword';
+    const newSalt = await bcrypt.genSalt(10);
+    const newHashedPassword = await bcrypt.hash(newPassword, newSalt);
+    const newUser = User.reConstruct(userId, newUsername, newEmail, newHashedPassword);
+
+    // when
+    const result = await userRepository.update(newUser);
+
+    // then
+    expect(result.getEmail().value).toBe(newEmail);
+    expect(result.getUsername().value).toBe(newUsername);
+    expect(result.getHashedPassword().value).toBe(newHashedPassword);
+  })
 });
