@@ -1,12 +1,18 @@
 import { IPostRepository } from "../../domain/post/repository/post.repository";
 import { Post } from "../../domain/post/entity/post.entity";
 import { prisma } from "../prisma/prisma";
+import { Prisma, PrismaClient } from "@prisma/client";
+import { transactionContext } from "../prisma/transactionContext";
 
 
 export class PostRepository implements IPostRepository {
+  private getClient(): Prisma.TransactionClient | PrismaClient {
+    return transactionContext.getStore() ?? prisma;
+  }
 
   async create(post: Post): Promise<Post> {
-    const { id, title, price, userId, createAt, updatedAt } = await prisma.post.create({
+    const client = this.getClient();
+    const { id, title, price, userId, createAt, updatedAt } = await client.post.create({
       data: {
         id: post.getPostId().value,
         title: post.getTitle().value,
@@ -19,7 +25,8 @@ export class PostRepository implements IPostRepository {
   }
 
   async findAll(): Promise<Post[]> {
-    const posts = await prisma.post.findMany(
+    const client = this.getClient();
+    const posts = await client.post.findMany(
       { orderBy: { createAt: 'desc' } }
     );
 
