@@ -8,6 +8,7 @@ import { PostRepository } from "../post.repository";
 import { prisma } from "../../prisma/prisma";
 import { User } from '../../../domain/user/entity/user.entity';
 import { UserRepository } from '../user.repository';
+import { transactionTest } from './transactionTest';
 
 
 describe('PostRepository', async () => {
@@ -33,7 +34,7 @@ describe('PostRepository', async () => {
     await prisma.$disconnect()
   })
 
-  it('全ての投稿を取得できること', async () => {
+  it('全ての投稿を取得できること', transactionTest(async () => {
     // given
     await userRepository.create(user);
 
@@ -70,5 +71,5 @@ describe('PostRepository', async () => {
     expect(result2.getTitle().value).toBe(title2.value);
     expect(result2.getPrice().value).toBe(price2.value);
     expect(result2.getUserId().value).toBe(userId2.value);
-  });
+  }));
 });
