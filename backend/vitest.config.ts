@@ -12,5 +12,7 @@ export default defineConfig({
     alias: {
       "@": path.resolve(__dirname, "./src"),
     },
-  },
+    maxWorkers: 1,
+    minWorkers: 1,
+  }
 });
