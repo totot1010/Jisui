@@ -4,6 +4,7 @@ import { Email, UserId } from "../../domain/user/value_object";
 import { prisma } from "../prisma/prisma";
 import { Prisma, PrismaClient } from "@prisma/client";
 import { transactionContext } from "../prisma/transactionContext";
+import { UserNotFoundError } from "../../domain/user/exceptions/userNotFoundError";
 
 
 export class UserRepository implements IUserRepository {
@@ -62,6 +63,21 @@ export class UserRepository implements IUserRepository {
     return users.map(user => {
       return User.reConstruct(user.id, user.username, user.email, user.password);
     });
+  }
+
+  async getById(id: UserId): Promise<User> {
+    const client = this.getClient();
+    const user = await client.user.findUnique({
+      where: {
+        id: id.value
+      }
+    });
+
+    if (user === null) {
+      throw new UserNotFoundError("ユーザーが見つかりませんでした");
+    }
+
+    return User.reConstruct(user.id, user.username, user.email, user.password);
   }
 
   async update(user: User): Promise<User> {
