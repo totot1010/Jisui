@@ -5,6 +5,7 @@ import { UserRepository } from '../user.repository';
 import { User } from '../../../domain/user/entity/user.entity';
 import { prisma } from '../../prisma/prisma';
 import { Email, UserId } from '../../../domain/user/value_object';
+import { transactionTest } from './transactionTest';
 
 
 describe('userRepository', async () => {
@@ -29,7 +30,7 @@ describe('userRepository', async () => {
   })
 
 
-  it('ユーザーが作成できること', async () => {
+  it('ユーザーが作成できること', transactionTest(async () => {
     // given
     const user = User.reConstruct(userId, username, email, hashedPassword);
 
@@ -38,9 +39,9 @@ describe('userRepository', async () => {
 
     // then
     expect(result).toBeTruthy();
-  });
+  }));
 
-  it('emailでユーザーを取得できること', async () => {
+  it('emailでユーザーを取得できること', transactionTest(async () => {
     // given
     const user = User.reConstruct(userId, username, email, hashedPassword);
     await userRepository.create(user);
@@ -51,9 +52,9 @@ describe('userRepository', async () => {
     // then
     expect(result).toBeTruthy();
 
-  })
+  }));
 
-  it('idでユーザーを取得できること', async () => {
+  it('idでユーザーを取得できること', transactionTest(async () => {
     // given
     const user = User.reConstruct(userId, username, email, hashedPassword);
     await userRepository.create(user);
@@ -64,9 +65,9 @@ describe('userRepository', async () => {
 
     // then
     expect(result).toBeTruthy();
-  })
+  }));
 
-  it('全ユーザーを取得できること', async () => {
+  it('全ユーザーを取得できること', transactionTest(async () => {
     // given
     const user = User.reConstruct(userId, username, email, hashedPassword);
 
@@ -93,9 +94,9 @@ describe('userRepository', async () => {
     expect(result2.getUsername().value).toBe(username2);
     expect(result2.getEmail().value).toBe(email2);
     expect(result2.getHashedPassword().value).toBe(hashedPassword2);
-  })
+  }));
 
-  it('ユーザーが更新できること', async () => {
+  it('ユーザーが更新できること', transactionTest(async () => {
     // given
     const user = User.reConstruct(userId, username, email, hashedPassword);
     await userRepository.create(user);
@@ -114,5 +115,5 @@ describe('userRepository', async () => {
     expect(result.getEmail().value).toBe(newEmail);
     expect(result.getUsername().value).toBe(newUsername);
     expect(result.getHashedPassword().value).toBe(newHashedPassword);
-  })
+  }));
 });

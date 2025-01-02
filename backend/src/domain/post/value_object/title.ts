@@ -8,11 +8,11 @@ export class Title {
 
   private __validate(value: string) {
     if (value.length < 1) {
-      throw new Error('タイトル1文字以上にしてください');
+      throw new Error('タイトルは1文字以上にしてください');
     }
 
     if (value.length >= 50) {
-      throw new Error('タイトルは100文字以下にしてください');
+      throw new Error('タイトルは50文字以下にしてください');
     }
   }
 
