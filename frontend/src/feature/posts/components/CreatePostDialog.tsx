@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { PenSquare } from 'lucide-react'
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/shadcn/dialog"
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/shadcn/dialog"
 import { Button } from "@/components/shadcn/button"
 import { Input } from "@/components/shadcn/input"
 import { Textarea } from "@/components/shadcn/textarea"
@@ -30,6 +30,9 @@ export const CreatePostDialog = ({ open, onClose }: CreatePostDialogProps) => {
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>料理を投稿</DialogTitle>
+          <DialogDescription>
+            料理名、料金、説明、画像を入力してください
+          </DialogDescription>
         </DialogHeader>
         <div className="space-y-4">
           <div className="space-y-2">

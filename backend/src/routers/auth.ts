@@ -4,13 +4,11 @@ import { TokenService } from "../application/auth/service/token.service";
 import { LoginService } from "../application/auth/service/login.service";
 import { LoginRequestDto } from "../application/auth/dto/login.dto";
 
-const auth = new Hono();
-
+const auth = new Hono().basePath("/auth");
 const userRepository = new UserRepository();
 
 const tokenService = new TokenService();
 const loginService = new LoginService(userRepository, tokenService);
-
 
 auth.post("/login", async (c) => {
   const body = await c.req.json();
@@ -29,14 +27,11 @@ auth.post("/login", async (c) => {
 });
 
 auth.post("/refresh", async (c) => {
-  const authHeader = c.req.header('Authorization');
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return c.json({ message: "リフレッシュトークンがありません" }, 401);
-  }
-  // 'Bearer 'の部分を除去してリフレッシュトークンを取得
-  const refreshToken = authHeader.slice(7);
+  const body = await c.req.json();
+  const { refreshToken } = body;
   const accessToken = await loginService.refresh(refreshToken);
-  return c.json({accessToken: accessToken}, 200);
+
+  return c.json({ accessToken: accessToken }, 200);
 }).onError((error: any, c) => {
   if (error instanceof Error) {
     console.error(error);
@@ -44,6 +39,5 @@ auth.post("/refresh", async (c) => {
   }
   return c.json({ message: "" }, 500);
 });
-
 
 export default auth;

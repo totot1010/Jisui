@@ -63,4 +63,21 @@ export class UserRepository implements IUserRepository {
       return User.reConstruct(user.id, user.username, user.email, user.password);
     });
   }
+
+  async update(user: User): Promise<User> {
+    console.log("email", user.getEmail().value);
+    const { id, email, username, password } = await prisma.user.update({
+      where: {
+        id: user.getUserId().value
+      },
+      data: {
+        email: user.getEmail().value,
+        username: user.getUsername().value,
+        password: user.getHashedPassword().value,
+      }
+    });
+
+    return User.reConstruct(id, username, email, password);
+  }
+
 }

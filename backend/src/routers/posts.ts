@@ -4,8 +4,12 @@ import { PostRepository } from "../infrastructure/repository/post.repository";
 import { PostQueryService } from "../application/post/service/postQuery.service";
 import { UserQueryService } from "../application/user/service/userQuery.service";
 import { GetAllPostWithUserService } from "../application/query/service/getAllPostWithUser.service";
+import { requiredAuth } from "./middleware";
 
-const post = new Hono();
+const post = new Hono().basePath("/posts");
+
+post.use(requiredAuth);
+
 const userRepository = new UserRepository();
 const postRepository = new PostRepository();
 

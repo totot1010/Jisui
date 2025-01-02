@@ -57,4 +57,14 @@ export class UserFakeRepository implements IUserRepository {
 
     return [user1, user2];
   }
+
+  async update(user: User): Promise<User> {
+    const userId = user.getUserId().value;
+    const username = user.getUsername().value;
+    const email = user.getEmail().value;
+    const HashedPassword = user.getHashedPassword().value
+
+    return User.reConstruct(userId, username, email, HashedPassword);
+  }
+
 }
