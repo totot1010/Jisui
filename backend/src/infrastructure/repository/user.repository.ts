@@ -81,8 +81,8 @@ export class UserRepository implements IUserRepository {
   }
 
   async update(user: User): Promise<User> {
-    console.log("email", user.getEmail().value);
-    const { id, email, username, password } = await prisma.user.update({
+    const client = this.getClient();
+    const { id, email, username, password } = await client.user.update({
       where: {
         id: user.getUserId().value
       },
