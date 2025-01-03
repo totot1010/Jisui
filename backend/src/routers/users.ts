@@ -9,6 +9,9 @@ import { requiredAuth } from "./middleware";
 import { UpdateUserRequestDto } from "../application/user/dto/updateUser.dto";
 import { UserUpdateService } from "../application/user/service/userUpdate.service";
 import { ValidationError } from "../shared/exceptions/validationError";
+import { UserQueryService } from "../application/user/service/userQuery.service";
+import { GetUserRequestDto, GetUserResponseDto } from "../application/user/dto/getUser.dto";
+import { UserNotFoundError } from "../domain/user/exceptions/userNotFoundError";
 
 // c.getで取得するパラメータの型
 type Variables = {
@@ -19,6 +22,9 @@ const user = new Hono<{ Variables: Variables }>().basePath("/users");
 user.onError((error: any, c) => {
   if (error instanceof UserDuplicationError || error instanceof ValidationError) {
     return c.json({ message: String(error.message) }, 400);
+  }
+  if (error instanceof UserNotFoundError) {
+    return c.json({ message: String(error.message) }, 404);
   }
   if (error instanceof HTTPException) {
     return error.getResponse();
@@ -51,10 +57,16 @@ user.post("/", async (c) => {
 // ここから下は認証が必要
 user.use(requiredAuth);
 
-user.get("/:id", (c) => {
+user.get("/:id", async (c) => {
   const id = c.req.param('id')
+  const userRepository = new UserRepository();
+  const userQueryService = new UserQueryService(userRepository);
+  const user: GetUserResponseDto = await userQueryService.getById(new GetUserRequestDto(id));
 
-  return c.json({ message: `User with id ${id}` }, 200);
+  return c.json({
+    message: "User get success",
+    data: user
+  }, 200);
 });
 
 user.put("/", async (c) => {
