@@ -4,7 +4,7 @@ export type ApiError = {
 	type: "error";
 	status: string;
 	title?: string;
-	message: string;
+	message?: string;
 };
 
 export type ApiResponse<ResponseType> =
@@ -28,7 +28,7 @@ export const ApiClient = () => {
 		// クエリパラメータがあればURLに追加
 		const requestUrl = queryString ? `${path}?${queryString}` : path;
 
-		return request(requestUrl, "GET", params, auth);
+		return request(requestUrl, "GET", undefined, auth);
 	};
 	const Post = <RequestType = undefined, ResponseType = unknown>(
 		path: string,
@@ -99,8 +99,12 @@ const request = async <RequestType = undefined, ResponseType = unknown>(
 			"Content-Type": "application/json",
 			"Authorization": auth ? `Bearer ${accessToken}` : "",
 		},
-		body: params ? JSON.stringify(params) : undefined,
 	};
+
+	if (method !== "GET" && params) {
+		options.body = JSON.stringify(params);
+	}
+
 	const response = await fetch(url, options);
 	return handleResponse<ResponseType>(response);
 };
