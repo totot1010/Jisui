@@ -7,6 +7,7 @@ import { HTTPException } from 'hono/http-exception';
 import auth from './routers/auth'
 import user from './routers/users'
 import post from './routers/posts'
+import { HttpStatus } from './shared/constants/statusCode';
 
 const app = new Hono().basePath('/api/v1');
 app.use(prettyJSON());
@@ -27,7 +28,7 @@ app.route('/', user);
 app.route('/', post);
 
 app.notFound((c) => {
-  return c.json('Not Found', 404)
+  return c.json('Not Found', HttpStatus.NOT_FOUND);
 });
 
 app.onError((err, c) => {
@@ -35,7 +36,7 @@ app.onError((err, c) => {
     console.error(err);
     return err.getResponse();
   }
-  return c.json({ message: 'Internal Server Error' }, 500);
+  return c.json({ message: 'Internal Server Error' }, HttpStatus.INTERNAL_SERVER_ERROR);
 });
 
 console.log(`Server is running on http://localhost:8787`);
