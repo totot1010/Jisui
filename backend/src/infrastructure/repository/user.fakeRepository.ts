@@ -58,6 +58,17 @@ export class UserFakeRepository implements IUserRepository {
     return [user1, user2];
   }
 
+  async getById(id: UserId): Promise<User> {
+    const userId = id.value;
+    const username = 'username';
+    const email = 'aaa@aaa.com';
+    const RawPassword = 'password';
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(RawPassword, salt);
+
+    return User.reConstruct(userId, username, email, hashedPassword);
+  }
+
   async update(user: User): Promise<User> {
     const userId = user.getUserId().value;
     const username = user.getUsername().value;
