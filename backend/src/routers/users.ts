@@ -46,12 +46,9 @@ user.post("/", async (c) => {
   const user = await userCreateService.create(createUserRequestDto);
 
   return c.json({
-    message: "User created success",
-    data: {
-      id: user.getUserId().value,
-      email: user.getEmail().value,
-      username: user.getUsername().value,
-    }
+    userId: user.getUserId().value,
+    email: user.getEmail().value,
+    username: user.getUsername().value,
   }, HttpStatus.CREATED);
 });
 
@@ -64,10 +61,7 @@ user.get("/:id", async (c) => {
   const userQueryService = new UserQueryService(userRepository);
   const user: GetUserResponseDto = await userQueryService.getById(new GetUserRequestDto(id));
 
-  return c.json({
-    message: "User get success",
-    data: user
-  }, HttpStatus.OK);
+  return c.json(user, HttpStatus.OK);
 });
 
 user.put("/", async (c) => {
@@ -87,12 +81,9 @@ user.put("/", async (c) => {
   const user = await userUpdateService.update(updateUserRequestDto);
 
   return c.json({
-    message: "User updated success",
-    data: {
-      id: user.getUserId().value,
-      email: user.getEmail().value,
-      username: user.getUsername().value,
-    }
+    userId: user.getUserId().value,
+    email: user.getEmail().value,
+    username: user.getUsername().value,
   }, HttpStatus.OK);
 });
 

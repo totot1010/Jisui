@@ -20,11 +20,10 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { CreatePostDialog } from "../CreatePostDialog";
 import { logout } from "@/feature/auth/actions/logout";
 
-export const AllPostSideNav = () => {
+export const AllPostSideNav = ({ userId }: { userId: string }) => {
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const handleLogout = async () => {
-    console.log('ログアウト処理を実行')
     await logout()
   }
   return (
@@ -34,8 +33,8 @@ export const AllPostSideNav = () => {
           <Tooltip>
             <TooltipTrigger asChild>
               <Button variant="outline" size="icon" className="rounded-full w-12 h-12" onClick={() => setDialogOpen(true)}>
-                  <PenSquare className="h-5 w-5" />
-                  <span className="sr-only">料理を投稿</span>
+                <PenSquare className="h-5 w-5" />
+                <span className="sr-only">料理を投稿</span>
               </Button>
             </TooltipTrigger>
             <TooltipContent side="right">
@@ -46,7 +45,7 @@ export const AllPostSideNav = () => {
           <Tooltip>
             <TooltipTrigger asChild>
               <Button variant="outline" size="icon" className="rounded-full w-12 h-12" asChild>
-                <Link href="/profile">
+                <Link href={`/profile/${userId}`}>
                   <User className="h-5 w-5" />
                   <span className="sr-only">マイページ</span>
                 </Link>
@@ -79,11 +78,11 @@ export const AllPostSideNav = () => {
                 </DialogDescription>
               </DialogHeader>
               <DialogFooter>
-              <DialogClose asChild>
-                <Button variant="outline">
-                  キャンセル
-                </Button>
-              </DialogClose>
+                <DialogClose asChild>
+                  <Button variant="outline">
+                    キャンセル
+                  </Button>
+                </DialogClose>
                 <Button variant="destructive" onClick={handleLogout}>
                   ログアウト
                 </Button>
