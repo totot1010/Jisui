@@ -12,6 +12,7 @@ import { ValidationError } from "../shared/exceptions/validationError";
 import { UserQueryService } from "../application/user/service/userQuery.service";
 import { GetUserRequestDto, GetUserResponseDto } from "../application/user/dto/getUser.dto";
 import { UserNotFoundError } from "../domain/user/exceptions/userNotFoundError";
+import { HttpStatus } from "../shared/constants/statusCode";
 
 // c.getで取得するパラメータの型
 type Variables = {
@@ -21,15 +22,15 @@ type Variables = {
 const user = new Hono<{ Variables: Variables }>().basePath("/users");
 user.onError((error: any, c) => {
   if (error instanceof UserDuplicationError || error instanceof ValidationError) {
-    return c.json({ message: String(error.message) }, 400);
+    return c.json({ message: String(error.message) }, HttpStatus.BAD_REQUEST);
   }
   if (error instanceof UserNotFoundError) {
-    return c.json({ message: String(error.message) }, 404);
+    return c.json({ message: String(error.message) }, HttpStatus.NOT_FOUND);
   }
   if (error instanceof HTTPException) {
     return error.getResponse();
   }
-  return c.json({}, 500);
+  return c.json({ message: "Internal Server Error" }, HttpStatus.INTERNAL_SERVER_ERROR);
 });
 
 const userRepository = new UserRepository();
@@ -48,7 +49,7 @@ user.post("/", async (c) => {
     userId: user.getUserId().value,
     email: user.getEmail().value,
     username: user.getUsername().value,
-  }, 200);
+  }, HttpStatus.CREATED);
 });
 
 // ここから下は認証が必要
@@ -60,7 +61,7 @@ user.get("/:id", async (c) => {
   const userQueryService = new UserQueryService(userRepository);
   const user: GetUserResponseDto = await userQueryService.getById(new GetUserRequestDto(id));
 
-  return c.json(user, 200);
+  return c.json(user, HttpStatus.OK);
 });
 
 user.put("/", async (c) => {
@@ -83,11 +84,11 @@ user.put("/", async (c) => {
     userId: user.getUserId().value,
     email: user.getEmail().value,
     username: user.getUsername().value,
-  }, 200);
+  }, HttpStatus.OK);
 });
 
 user.delete("/", (c) => {
-  return c.json({ message: "User deleted success" }, 200);
+  return c.json({ message: "User deleted success" }, HttpStatus.OK);
 });
 
 export default user;
