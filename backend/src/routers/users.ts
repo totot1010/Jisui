@@ -29,7 +29,7 @@ user.onError((error: any, c) => {
   if (error instanceof HTTPException) {
     return error.getResponse();
   }
-  return c.json({ message: "Internal Server Error" }, 500);
+  return c.json({}, 500);
 });
 
 const userRepository = new UserRepository();
@@ -45,12 +45,9 @@ user.post("/", async (c) => {
   const user = await userCreateService.create(createUserRequestDto);
 
   return c.json({
-    message: "User created success",
-    data: {
-      id: user.getUserId().value,
-      email: user.getEmail().value,
-      username: user.getUsername().value,
-    }
+    userId: user.getUserId().value,
+    email: user.getEmail().value,
+    username: user.getUsername().value,
   }, 200);
 });
 
@@ -63,10 +60,7 @@ user.get("/:id", async (c) => {
   const userQueryService = new UserQueryService(userRepository);
   const user: GetUserResponseDto = await userQueryService.getById(new GetUserRequestDto(id));
 
-  return c.json({
-    message: "User get success",
-    data: user
-  }, 200);
+  return c.json(user, 200);
 });
 
 user.put("/", async (c) => {
@@ -86,12 +80,9 @@ user.put("/", async (c) => {
   const user = await userUpdateService.update(updateUserRequestDto);
 
   return c.json({
-    message: "User updated success",
-    data: {
-      id: user.getUserId().value,
-      email: user.getEmail().value,
-      username: user.getUsername().value,
-    }
+    userId: user.getUserId().value,
+    email: user.getEmail().value,
+    username: user.getUsername().value,
   }, 200);
 });
 
