@@ -1,11 +1,11 @@
+import { IPostRepository } from "../../../domain/post/repository/post.repository";
 import { PostId } from "../../../domain/post/value_object";
 import { UserId } from "../../../domain/user/value_object";
-import { PostRepository } from "../../../infrastructure/repository/post.repository";
 import { LikePostRequestDto } from "../dto/likePost.dto";
 
 
 export class PostLikeService {
-  constructor(private postRepository: PostRepository) { }
+  constructor(private postRepository: IPostRepository) { }
 
   async likePost(likePostRequestDto: LikePostRequestDto): Promise<void> {
     const userId = new UserId(likePostRequestDto.userId);
