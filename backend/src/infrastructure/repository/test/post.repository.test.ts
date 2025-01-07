@@ -72,4 +72,92 @@ describe('PostRepository', async () => {
     expect(result2.getPrice().value).toBe(price2.value);
     expect(result2.getUserId().value).toBe(userId2.value);
   }));
+
+  it('ある投稿への同一ユーザーのいいねがある場合、Trueが返ってくること', transactionTest(async () => {
+    // given
+    await userRepository.create(user);
+
+    const postId = PostId.generate();
+    const title = new Title('title');
+    const price = new Price(1000);
+    const userId = user.getUserId();
+    const createAt = new Date();
+    const updatedAt = new Date();
+    const post = new Post(postId, title, price, userId, createAt, updatedAt);
+
+    await postRepository.create(post);
+    await postRepository.like(userId, postId);
+
+    // when
+    const result = await postRepository.isExistsPostLikeByUserIdAndPostId(userId, postId);
+
+    // then
+    expect(result).toBeTruthy();
+  }));
+
+  it('ユーザーが投稿にいいねしていない場合、Falseが返ってくること', transactionTest(async () => {
+    // given
+    await userRepository.create(user);
+
+    const postId = PostId.generate();
+    const title = new Title('title');
+    const price = new Price(1000);
+    const userId = user.getUserId();
+    const createAt = new Date();
+    const updatedAt = new Date();
+    const post = new Post(postId, title, price, userId, createAt, updatedAt);
+
+    await postRepository.create(post);
+
+    // when
+    const result = await postRepository.isExistsPostLikeByUserIdAndPostId(userId, postId);
+
+    // then
+    expect(result).toBeFalsy();
+  }));
+
+  it('投稿にいいねをすることができること', transactionTest(async () => {
+    // given
+    await userRepository.create(user);
+
+    const postId = PostId.generate();
+    const title = new Title('title');
+    const price = new Price(1000);
+    const userId = user.getUserId();
+    const createAt = new Date();
+    const updatedAt = new Date();
+    const post = new Post(postId, title, price, userId, createAt, updatedAt);
+
+    await postRepository.create(post);
+
+    // when
+    await postRepository.like(userId, postId);
+
+    // then
+    const result = await postRepository.isExistsPostLikeByUserIdAndPostId(userId, postId);
+    expect(result).toBeTruthy();
+  }));
+
+  it('投稿へのいいねを外すことができること', transactionTest(async () => {
+    // given
+    await userRepository.create(user);
+
+    const postId = PostId.generate();
+    const title = new Title('title');
+    const price = new Price(1000);
+    const userId = user.getUserId();
+    const createAt = new Date();
+    const updatedAt = new Date();
+    const post = new Post(postId, title, price, userId, createAt, updatedAt);
+
+    await postRepository.create(post);
+    await postRepository.like(userId, postId);
+
+    // when
+    await postRepository.unlike(userId, postId);
+
+    // then
+    const result = await postRepository.isExistsPostLikeByUserIdAndPostId(userId, postId);
+    expect(result).toBeFalsy();
+  }));
 });

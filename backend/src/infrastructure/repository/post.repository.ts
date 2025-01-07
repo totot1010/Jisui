@@ -59,7 +59,7 @@ export class PostRepository implements IPostRepository {
     });
   }
 
-  async unLike(userId: UserId, postId: PostId): Promise<void> {
+  async unlike(userId: UserId, postId: PostId): Promise<void> {
     const client = this.getClient();
     await client.postLike.delete({
       where: {

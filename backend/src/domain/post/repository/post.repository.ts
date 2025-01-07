@@ -7,5 +7,5 @@ export interface IPostRepository {
   findAll(): Promise<Post[]>;
   isExistsPostLikeByUserIdAndPostId(userId: UserId, postId: PostId): Promise<boolean>;
   like(userId: UserId, postId: PostId): Promise<void>;
-  unLike(userId: UserId, postId: PostId): Promise<void>;
+  unlike(userId: UserId, postId: PostId): Promise<void>;
 }

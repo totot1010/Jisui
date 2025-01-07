@@ -13,7 +13,7 @@ export class PostLikeService {
     const isExistsPostLike = await this.postRepository.isExistsPostLikeByUserIdAndPostId(userId, postId);
 
     if (isExistsPostLike) {
-      await this.postRepository.unLike(userId, postId);
+      await this.postRepository.unlike(userId, postId);
     } else {
       await this.postRepository.like(userId, postId);
     }
