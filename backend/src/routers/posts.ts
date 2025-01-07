@@ -6,6 +6,8 @@ import { UserQueryService } from "../application/user/service/userQuery.service"
 import { GetAllPostWithUserService } from "../application/query/service/getAllPostWithUser.service";
 import { requiredAuth } from "./middleware";
 import { HttpStatus } from "../shared/constants/statusCode";
+import { LikePostRequestDto } from "../application/post/dto/likePost.dto";
+import { PostLikeService } from "../application/post/service/postLike.service";
 
 const post = new Hono().basePath("/posts");
 
@@ -21,8 +23,14 @@ post.post("/", (c) => {
   return c.json({ message: "post created" }, HttpStatus.CREATED);
 });
 
-post.post("/likes", (c) => {
-  return c.json({ message: "post liked" }, HttpStatus.OK);
+post.post("/likes", async (c) => {
+  const body = await c.req.json();
+  const { userId, postId } = body;
+  const likePostRequestDto = new LikePostRequestDto(postId, userId);
+  const postRepository = new PostRepository();
+  const postLikeService = new PostLikeService(postRepository)
+  await postLikeService.likePost(likePostRequestDto);
+  return c.json({ message: "" }, HttpStatus.OK);
 });
 
 post.post("/comments", (c) => {

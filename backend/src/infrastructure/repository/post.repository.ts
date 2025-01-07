@@ -3,6 +3,8 @@ import { Post } from "../../domain/post/entity/post.entity";
 import { prisma } from "../prisma/prisma";
 import { Prisma, PrismaClient } from "@prisma/client";
 import { transactionContext } from "../prisma/transactionContext";
+import { UserId } from "../../domain/user/value_object";
+import { PostId } from "../../domain/post/value_object";
 
 
 export class PostRepository implements IPostRepository {
@@ -32,6 +34,40 @@ export class PostRepository implements IPostRepository {
 
     return posts.map(post => {
       return Post.reConstruct(post.id, post.title, post.price, post.userId, post.createAt, post.updatedAt);
+    });
+  }
+
+  async isExistsPostLikeByUserIdAndPostId(userId: UserId, postId: PostId): Promise<boolean> {
+    const client = this.getClient();
+    const postLike = await client.postLike.findFirst({
+      where: {
+        userId: userId.value,
+        postId: postId.value,
+      }
+    });
+
+    return !!postLike;
+  }
+
+  async like(userId: UserId, postId: PostId): Promise<void> {
+    const client = this.getClient();
+    await client.postLike.create({
+      data: {
+        userId: userId.value,
+        postId: postId.value,
+      }
+    });
+  }
+
+  async unLike(userId: UserId, postId: PostId): Promise<void> {
+    const client = this.getClient();
+    await client.postLike.delete({
+      where: {
+        postId_userId: {
+          userId: userId.value,
+          postId: postId.value,
+        }
+      }
     });
   }
 }
