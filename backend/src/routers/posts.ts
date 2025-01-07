@@ -27,7 +27,6 @@ post.post("/likes", async (c) => {
   const body = await c.req.json();
   const { userId, postId } = body;
   const likePostRequestDto = new LikePostRequestDto(postId, userId);
-  const postRepository = new PostRepository();
   const postLikeService = new PostLikeService(postRepository)
   await postLikeService.likePost(likePostRequestDto);
   return c.json({ message: "" }, HttpStatus.OK);

@@ -15,13 +15,21 @@ describe('PostRepository', async () => {
   const postRepository = new PostRepository()
   const userRepository = new UserRepository()
 
+  const salt = await bcrypt.genSalt(10);
+
   const userId = UserId.generate().value;
   const username = 'username';
   const email = 'aaa@aaa.com'
   const RawPassword = 'password';
-  const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(RawPassword, salt);
   const user = User.reConstruct(userId, username, email, hashedPassword);
+
+  const userId2 = UserId.generate().value;
+  const username2 = 'username2';
+  const email2 = 'bbb@bbb.com'
+  const RawPassword2 = 'password';
+  const hashedPassword2 = await bcrypt.hash(RawPassword2, salt);
+  const user2 = User.reConstruct(userId2, username2, email2, hashedPassword2);
 
   afterEach(async () => {
     const deletePosts = prisma.post.deleteMany()
@@ -119,6 +127,7 @@ describe('PostRepository', async () => {
   it('投稿にいいねをすることができること', transactionTest(async () => {
     // given
     await userRepository.create(user);
+    await userRepository.create(user2);
 
     const postId = PostId.generate();
     const title = new Title('title');
@@ -128,19 +137,32 @@ describe('PostRepository', async () => {
     const updatedAt = new Date();
     const post = new Post(postId, title, price, userId, createAt, updatedAt);
 
+    const postId2 = PostId.generate();
+    const title2 = new Title('title2');
+    const price2 = new Price(2000);
+    const userId2 = user2.getUserId();
+    const createAt2 = new Date();
+    const updatedAt2 = new Date();
+    const post2 = new Post(postId2, title2, price2, userId2, createAt2, updatedAt2);
+
     await postRepository.create(post);
+    await postRepository.create(post2);
 
     // when
     await postRepository.like(userId, postId);
+    await postRepository.like(userId, postId2);
 
     // then
     const result = await postRepository.isExistsPostLikeByUserIdAndPostId(userId, postId);
     expect(result).toBeTruthy();
+    const result2 = await postRepository.isExistsPostLikeByUserIdAndPostId(userId, postId2);
+    expect(result2).toBeTruthy();
   }));
 
   it('投稿へのいいねを外すことができること', transactionTest(async () => {
     // given
     await userRepository.create(user);
+    await userRepository.create(user2);
 
     const postId = PostId.generate();
     const title = new Title('title');
@@ -150,14 +172,28 @@ describe('PostRepository', async () => {
     const updatedAt = new Date();
     const post = new Post(postId, title, price, userId, createAt, updatedAt);
 
+    const postId2 = PostId.generate();
+    const title2 = new Title('title2');
+    const price2 = new Price(2000);
+    const userId2 = user2.getUserId();
+    const createAt2 = new Date();
+    const updatedAt2 = new Date();
+    const post2 = new Post(postId2, title2, price2, userId2, createAt2, updatedAt2);
+
     await postRepository.create(post);
+    await postRepository.create(post2);
+
     await postRepository.like(userId, postId);
+    await postRepository.like(userId, postId2);
 
     // when
     await postRepository.unlike(userId, postId);
+    await postRepository.unlike(userId, postId2);
 
     // then
     const result = await postRepository.isExistsPostLikeByUserIdAndPostId(userId, postId);
     expect(result).toBeFalsy();
+    const result2 = await postRepository.isExistsPostLikeByUserIdAndPostId(userId, postId2);
+    expect(result2).toBeFalsy();
   }));
 });
