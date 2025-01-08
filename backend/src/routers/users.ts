@@ -57,7 +57,6 @@ user.use(requiredAuth);
 
 user.get("/:id", async (c) => {
   const id = c.req.param('id')
-  const userRepository = new UserRepository();
   const userQueryService = new UserQueryService(userRepository);
   const user: GetUserResponseDto = await userQueryService.getById(new GetUserRequestDto(id));
 
@@ -74,8 +73,6 @@ user.put("/", async (c) => {
   const body = await c.req.json();
   const { email, username, password, passwordConfirm } = body;
   const updateUserRequestDto = new UpdateUserRequestDto(userId, email, username, password, passwordConfirm);
-  const userRepository = new UserRepository();
-  const checkUserDuplicationDomainService = new CheckUserDuplicationDomainService(userRepository);
 
   const userUpdateService = new UserUpdateService(userRepository, checkUserDuplicationDomainService);
   const user = await userUpdateService.update(updateUserRequestDto);
