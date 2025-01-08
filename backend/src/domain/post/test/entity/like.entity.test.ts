@@ -29,6 +29,4 @@ describe('LikeEntity', () => {
     expect(like.getUserId().value).toBe(userIdValue);
     expect(like.getPostId().value).toBe(postIdValue);
   });
-
-
 })

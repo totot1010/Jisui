@@ -27,7 +27,6 @@ export class PostLikeService {
 
   private async like(newLike: Like): Promise<void> {
     await this.postRepository.createLike(newLike);
-
   }
 
 }

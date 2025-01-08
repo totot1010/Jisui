@@ -21,7 +21,6 @@ describe('PostLikeService', () => {
 
     // then
     expect(createLikeSpy).toHaveBeenCalled();
-
   });
 
   it('投稿のいいねを外すことができること', async () => {
