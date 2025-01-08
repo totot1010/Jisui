@@ -1,43 +1,25 @@
 import { Like } from "../../domain/post/entity/like.entity";
 import { Post } from "../../domain/post/entity/post.entity";
 import { IPostRepository } from "../../domain/post/repository/post.repository";
-import { PostId, Price, Title } from "../../domain/post/value_object";
-import { UserId } from "../../domain/user/value_object";
 
 
 export class PostFakeRepository implements IPostRepository {
 
   async create(post: Post): Promise<Post> {
-    const postId = post.getPostId().value;
-    const title = post.getTitle().value;
-    const price = post.getPrice().value;
-    const userId = post.getUserId().value
-    const createAt = post.getCreateAt();
-    const updatedAt = post.getUpdatedAt();
+    const id = 'id';
+    const title = 'title';
+    const price = 100;
+    const userId = 'userId';
+    const createAt = new Date();
+    const updatedAt = new Date();
 
-    return Post.reConstruct(postId, title, price, userId, createAt, updatedAt);
+    return Post.reConstruct(id, title, price, userId, createAt, updatedAt);
   }
 
   async findAll(): Promise<Post[]> {
-    const posts: Post[] = [
-      new Post(
-        PostId.generate(),
-        new Title('Post 1'),
-        new Price(1000),
-        UserId.generate(),
-        new Date(),
-        new Date()
-      ),
-      new Post(
-        PostId.generate(),
-        new Title('Post 2'),
-        new Price(2000),
-        UserId.generate(),
-        new Date(),
-        new Date()
-      ),
-    ];
-    return posts;
+    const post1 = Post.reConstruct('id1', 'title1', 100, 'userId1', new Date(), new Date());
+    const post2 = Post.reConstruct('id2', 'title2', 200, 'userId2', new Date(), new Date());
+    return [post1, post2];
   }
 
 
