@@ -1,3 +1,4 @@
+import { Like } from "../../domain/post/entity/like.entity";
 import { Post } from "../../domain/post/entity/post.entity";
 import { IPostRepository } from "../../domain/post/repository/post.repository";
 import { PostId, Price, Title } from "../../domain/post/value_object";
@@ -40,15 +41,15 @@ export class PostFakeRepository implements IPostRepository {
   }
 
 
-  async isExistsPostLikeByUserIdAndPostId(userId: UserId, postId: PostId): Promise<boolean> {
+  async existsLikeByUserAndPost(like: Like): Promise<boolean> {
     return true
   }
 
-  async like(userId: UserId, postId: PostId): Promise<void> {
+  async createLike(newLike: Like): Promise<void> {
     return
   }
 
-  async unlike(userId: UserId, postId: PostId): Promise<void> {
+  async deleteLike(existingLike: Like): Promise<void> {
     return
   }
 }

@@ -1,4 +1,4 @@
-import { describe, it, vi } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { PostLikeService } from "../service/postLike.service";
 import { PostFakeRepository } from '../../../infrastructure/repository/post.fakeRepository';
 import { LikePostRequestDto } from "../dto/likePost.dto";
@@ -10,20 +10,30 @@ describe('PostLikeService', () => {
   const postFakeRepository = new PostFakeRepository()
   const postLikeService = new PostLikeService(postFakeRepository);
 
-
   it('投稿にいいねすることができること', async () => {
     // given
-    postFakeRepository.isExistsPostLikeByUserIdAndPostId = vi.fn().mockResolvedValue(false);
+    const createLikeSpy = vi.spyOn(postFakeRepository, 'createLike')
+    postFakeRepository.existsLikeByUserAndPost = vi.fn().mockResolvedValue(false);
     const likePostRequestDto = new LikePostRequestDto(PostId.generate().value, UserId.generate().value);
-    // when & then
-    await postLikeService.likePost(likePostRequestDto);
+
+    // when
+    await postLikeService.toggleLike(likePostRequestDto);
+
+    // then
+    expect(createLikeSpy).toHaveBeenCalled();
+
   });
 
   it('投稿のいいねを外すことができること', async () => {
     // given
-    postFakeRepository.isExistsPostLikeByUserIdAndPostId = vi.fn().mockResolvedValue(true);
+    const deleteLikeSpy = vi.spyOn(postFakeRepository, 'deleteLike')
+    postFakeRepository.existsLikeByUserAndPost = vi.fn().mockResolvedValue(true);
     const likePostRequestDto = new LikePostRequestDto(PostId.generate().value, UserId.generate().value);
-    // when & then
-    await postLikeService.likePost(likePostRequestDto);
+
+    // when
+    await postLikeService.toggleLike(likePostRequestDto);
+
+    // then
+    expect(deleteLikeSpy).toHaveBeenCalled();
   });
 });

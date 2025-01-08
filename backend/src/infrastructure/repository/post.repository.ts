@@ -3,8 +3,7 @@ import { Post } from "../../domain/post/entity/post.entity";
 import { prisma } from "../prisma/prisma";
 import { Prisma, PrismaClient } from "@prisma/client";
 import { transactionContext } from "../prisma/transactionContext";
-import { UserId } from "../../domain/user/value_object";
-import { PostId } from "../../domain/post/value_object";
+import { Like } from "../../domain/post/entity/like.entity";
 
 
 export class PostRepository implements IPostRepository {
@@ -37,35 +36,35 @@ export class PostRepository implements IPostRepository {
     });
   }
 
-  async isExistsPostLikeByUserIdAndPostId(userId: UserId, postId: PostId): Promise<boolean> {
+  async existsLikeByUserAndPost(like: Like): Promise<boolean> {
     const client = this.getClient();
     const postLike = await client.postLike.findFirst({
       where: {
-        userId: userId.value,
-        postId: postId.value,
+        userId: like.getUserId().value,
+        postId: like.getPostId().value,
       }
     });
 
     return !!postLike;
   }
 
-  async like(userId: UserId, postId: PostId): Promise<void> {
+  async createLike(newLike: Like): Promise<void> {
     const client = this.getClient();
     await client.postLike.create({
       data: {
-        userId: userId.value,
-        postId: postId.value,
+        userId: newLike.getUserId().value,
+        postId: newLike.getPostId().value,
       }
     });
   }
 
-  async unlike(userId: UserId, postId: PostId): Promise<void> {
+  async deleteLike(existingLike: Like): Promise<void> {
     const client = this.getClient();
     await client.postLike.delete({
       where: {
         postId_userId: {
-          userId: userId.value,
-          postId: postId.value,
+          userId: existingLike.getUserId().value,
+          postId: existingLike.getPostId().value,
         }
       }
     });

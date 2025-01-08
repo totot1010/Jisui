@@ -9,6 +9,7 @@ import { prisma } from "../../prisma/prisma";
 import { User } from '../../../domain/user/entity/user.entity';
 import { UserRepository } from '../user.repository';
 import { transactionTest } from './transactionTest';
+import { Like } from '../../../domain/post/entity/like.entity';
 
 
 describe('PostRepository', async () => {
@@ -94,10 +95,11 @@ describe('PostRepository', async () => {
     const post = new Post(postId, title, price, userId, createAt, updatedAt);
 
     await postRepository.create(post);
-    await postRepository.like(userId, postId);
+    const like = new Like(userId, postId);
+    await postRepository.createLike(like);
 
     // when
-    const result = await postRepository.isExistsPostLikeByUserIdAndPostId(userId, postId);
+    const result = await postRepository.existsLikeByUserAndPost(like);
 
     // then
     expect(result).toBeTruthy();
@@ -116,9 +118,10 @@ describe('PostRepository', async () => {
     const post = new Post(postId, title, price, userId, createAt, updatedAt);
 
     await postRepository.create(post);
+    const like = new Like(userId, postId);
 
     // when
-    const result = await postRepository.isExistsPostLikeByUserIdAndPostId(userId, postId);
+    const result = await postRepository.existsLikeByUserAndPost(like);
 
     // then
     expect(result).toBeFalsy();
@@ -149,13 +152,15 @@ describe('PostRepository', async () => {
     await postRepository.create(post2);
 
     // when
-    await postRepository.like(userId, postId);
-    await postRepository.like(userId, postId2);
+    const like1 = new Like(userId, postId);
+    await postRepository.createLike(like1);
+    const like2 = new Like(userId, postId2);
+    await postRepository.createLike(like2);
 
     // then
-    const result = await postRepository.isExistsPostLikeByUserIdAndPostId(userId, postId);
+    const result = await postRepository.existsLikeByUserAndPost(like1);
     expect(result).toBeTruthy();
-    const result2 = await postRepository.isExistsPostLikeByUserIdAndPostId(userId, postId2);
+    const result2 = await postRepository.existsLikeByUserAndPost(like2);
     expect(result2).toBeTruthy();
   }));
 
@@ -183,17 +188,19 @@ describe('PostRepository', async () => {
     await postRepository.create(post);
     await postRepository.create(post2);
 
-    await postRepository.like(userId, postId);
-    await postRepository.like(userId, postId2);
+    const like1 = new Like(userId, postId);
+    await postRepository.createLike(like1);
+    const like2 = new Like(userId, postId2);
+    await postRepository.createLike(like2);
 
     // when
-    await postRepository.unlike(userId, postId);
-    await postRepository.unlike(userId, postId2);
+    await postRepository.deleteLike(like1);
+    await postRepository.deleteLike(like2);
 
     // then
-    const result = await postRepository.isExistsPostLikeByUserIdAndPostId(userId, postId);
+    const result = await postRepository.existsLikeByUserAndPost(like1);
     expect(result).toBeFalsy();
-    const result2 = await postRepository.isExistsPostLikeByUserIdAndPostId(userId, postId2);
+    const result2 = await postRepository.existsLikeByUserAndPost(like2);
     expect(result2).toBeFalsy();
   }));
 });
