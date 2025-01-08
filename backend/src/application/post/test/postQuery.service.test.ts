@@ -1,0 +1,38 @@
+import { describe, expect, it } from "vitest";
+import { PostQueryService } from "../service/postQuery.service";
+import { PostFakeRepository } from "../../../infrastructure/repository/post.fakeRepository";
+
+describe('PostQueryService', () => {
+  const postFakeRepository = new PostFakeRepository();
+  const postQueryService = new PostQueryService(postFakeRepository);
+
+  describe('findAll', async () => {
+    it('全ての投稿が取得できること', async () => {
+      // when
+      const posts = await postQueryService.findAll();
+
+      const [post1, post2] = posts;
+      // then
+      expect(posts).toHaveLength(2);
+      expect(post1.getTitle().value).toBe('title1');
+      expect(post2.getTitle().value).toBe('title2');
+      expect(post1.getPrice().value).toBe(100);
+      expect(post2.getPrice().value).toBe(200);
+      expect(post1.getUserId().value).toBe('userId1');
+      expect(post2.getUserId().value).toBe('userId2');
+      expect(post1.getCreateAt()).toBeInstanceOf(Date);
+      expect(post2.getCreateAt()).toBeInstanceOf(Date);
+      expect(post1.getUpdatedAt()).toBeInstanceOf(Date);
+      expect(post2.getUpdatedAt()).toBeInstanceOf(Date);
+
+      expect(post1.getPostId().value).toBe('id1');
+      expect(post2.getPostId().value).toBe('id2');
+      expect(post1.getTitle().value).toBe('title1');
+      expect(post2.getTitle().value).toBe('title2');
+      expect(post1.getPrice().value).toBe(100);
+      expect(post2.getPrice().value).toBe(200);
+      expect(post1.getUserId().value).toBe('userId1');
+      expect(post2.getUserId().value).toBe('userId2');
+    });
+  });
+});
