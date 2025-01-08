@@ -1,84 +1,51 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
-import Image from 'next/image'
-import { Upload } from 'lucide-react'
 import { Button } from "@/components/shadcn/button"
 import { Input } from "@/components/shadcn/input"
 import { Label } from "@/components/shadcn/label"
+import { User } from '../../types'
+import { updateUser } from '../../actions/updateUser'
 
 type UserEditFormProps = {
-  userId: string
+  user: User
 }
 
-export const UserEditForm = ({ userId }: UserEditFormProps) => {
+export const UserEditForm = ({ user }: UserEditFormProps) => {
+  const [isPending, startTransition] = useTransition()
   const router = useRouter()
-  const [avatar, setAvatar] = useState("/placeholder.svg?height=100&width=100")
   const [formData, setFormData] = useState({
-    username: "料理好きな太郎",
-    email: "taro@example.com",
-    userId: "taro_cook",
+    username: user.username,
+    email: user.email,
     password: "",
     confirmPassword: "",
   })
+
+  const [error, setError] = useState<string | null>(null)
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
     setFormData(prev => ({ ...prev, [name]: value }))
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    // ここでAPIを呼び出してユーザー情報を更新します
-    console.log("送信されたデータ:", formData)
-    router.push('/profile')
-  }
-
-  const handleAvatarChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0]
-    if (file) {
-      const reader = new FileReader()
-      reader.onloadend = () => {
-        setAvatar(reader.result as string)
-      }
-      reader.readAsDataURL(file)
+    setError(null)
+    startTransition(async () => {
+      const response = await updateUser(user.userId, formData)
+      if (response) {
+      setError(response.message || 'ユーザー情報の更新に失敗しました')
+      return
     }
+
+      router.push(`/profile/${user.userId}`)
+    })
   }
 
   return (
-
     <form onSubmit={handleSubmit} className="space-y-8">
-      <div className="flex items-center space-x-4">
-        <div className="relative">
-          <Image
-            src={avatar}
-            alt="アバター"
-            width={100}
-            height={100}
-            className="rounded-full"
-          />
-          <label
-            htmlFor="avatar-upload"
-            className="absolute bottom-0 right-0 bg-primary text-primary-foreground rounded-full p-1 cursor-pointer"
-          >
-            <Upload size={16} />
-          </label>
-          <input
-            id="avatar-upload"
-            type="file"
-            accept="image/*"
-            className="hidden"
-            onChange={handleAvatarChange}
-          />
-        </div>
-        <div>
-          <h2 className="text-xl font-semibold">アバターを変更</h2>
-          <p className="text-sm text-muted-foreground">
-            クリックして新しい画像をアップロード
-          </p>
-        </div>
-      </div>
+      {error && <p className="text-red-500">{error}</p>}
       <div className="space-y-4">
         <div>
           <Label htmlFor="username">ユーザー名</Label>
@@ -102,17 +69,8 @@ export const UserEditForm = ({ userId }: UserEditFormProps) => {
           />
         </div>
         <div>
-          <Label htmlFor="userId">ユーザーID</Label>
-          <Input
-            id="userId"
-            name="userId"
-            value={formData.userId}
-            onChange={handleInputChange}
-            placeholder="ユーザーID"
-          />
-        </div>
-        <div>
           <Label htmlFor="password">新しいパスワード</Label>
+          <p className="text-sm text-gray-500">入力した場合のみ更新します</p>
           <Input
             id="password"
             name="password"
@@ -134,7 +92,7 @@ export const UserEditForm = ({ userId }: UserEditFormProps) => {
           />
         </div>
       </div>
-      <Button type="submit">変更を保存</Button>
+      <Button type="submit" disabled={isPending}>変更を保存</Button>
     </form>
   )
 }
