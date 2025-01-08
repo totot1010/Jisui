@@ -22,8 +22,8 @@ describe('GetAllPostWithUserService', () => {
       // given
       // fakeRepositoryのreturnをmock化する
       postFakeRepository.findAll = vi.fn().mockResolvedValue([
-        new Post(new PostId('id1'), new Title('title1'), new Price(100), new UserId('userId1'), new Date(), new Date()),
-        new Post(new PostId('id2'), new Title('title2'), new Price(200), new UserId('userId2'), new Date(), new Date()),
+        new Post(new PostId('id1'), new Title('title1'), new Price(100), new UserId('userId1'), new Date(), new Date(), []),
+        new Post(new PostId('id2'), new Title('title2'), new Price(200), new UserId('userId2'), new Date(), new Date(), []),
       ]);
 
       userFakeRepository.findAll = vi.fn().mockResolvedValue([

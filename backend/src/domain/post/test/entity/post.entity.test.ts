@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { PostId, Price, Title } from "../../value_object";
 import { UserId } from "../../../user/value_object";
 import { Post } from "../../entity/post.entity";
+import { Like } from "../../entity/like.entity";
 
 describe('PostEntity', () => {
   it('インスタンス生成できること', () => {
@@ -12,9 +13,10 @@ describe('PostEntity', () => {
     const userId = UserId.generate();
     const createAt = new Date();
     const updatedAt = new Date();
+    const likes = [new Like(userId, postId)];
 
     // when
-    const post = new Post(postId, title, price, userId, createAt, updatedAt);
+    const post = new Post(postId, title, price, userId, createAt, updatedAt, likes);
 
     // then
     expect(post.getPostId().value).toBe(postId.value);
@@ -23,19 +25,21 @@ describe('PostEntity', () => {
     expect(post.getUserId().value).toBe(userId.value);
     expect(post.getCreateAt()).toBe(createAt);
     expect(post.getUpdatedAt()).toBe(updatedAt);
+    expect(post.getLikes()).toBe(likes);
   });
 
   it('永続化層から取得したデータをエンティティに変換できること', () => {
     // given
-    const postIdValue = '1234-5678-9012';
+    const postIdValue = PostId.generate().value;
     const titleValue = 'title';
     const priceValue = 1000;
-    const userIdValue = '1234-5678-9012';
+    const userIdValue = UserId.generate().value;
     const createAt = new Date();
     const updatedAt = new Date();
+    const likes = [new Like(new UserId(userIdValue), new PostId(postIdValue))];
 
     // when
-    const post = Post.reConstruct(postIdValue, titleValue, priceValue, userIdValue, createAt, updatedAt);
+    const post = Post.reConstruct(postIdValue, titleValue, priceValue, userIdValue, createAt, updatedAt, likes);
 
     // then
     expect(post.getPostId().value).toBe(postIdValue);
@@ -44,6 +48,7 @@ describe('PostEntity', () => {
     expect(post.getUserId().value).toBe(userIdValue);
     expect(post.getCreateAt()).toBe(createAt);
     expect(post.getUpdatedAt()).toBe(updatedAt);
+    expect(post.getLikes()).toBe(likes);
   });
 
 
