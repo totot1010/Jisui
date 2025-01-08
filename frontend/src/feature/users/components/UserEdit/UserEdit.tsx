@@ -3,17 +3,17 @@ import { UserEditForm } from '../UserEditForm/UserEditForm'
 import { GetUserResponseDto } from '../../types'
 
 type UserEditProps = {
-	userId: string
+  userId: string
 }
 
 export const UserEdit = async ({ userId }: UserEditProps) => {
-	const response = await ApiClient().Get<undefined, GetUserResponseDto>(`users/${userId}`);
-	if (isApiError(response)) {
-		return <p className="text-red-500">{response.message ?? 'ユーザーの取得に失敗しました'}</p>;
-	}
-	const user = response.data;
+  const response = await ApiClient().Get<undefined, GetUserResponseDto>(`users/${userId}`);
+  if (isApiError(response)) {
+    return <p className="text-red-500">{response.message ?? 'ユーザーの取得に失敗しました'}</p>;
+  }
+  const user = response.data;
 
-	return (
-		<UserEditForm user={user} />
-	)
+  return (
+    <UserEditForm user={user} />
+  )
 }

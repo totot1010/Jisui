@@ -35,9 +35,9 @@ export const UserEditForm = ({ user }: UserEditFormProps) => {
     startTransition(async () => {
       const response = await updateUser(user.userId, formData)
       if (response) {
-      setError(response.message || 'ユーザー情報の更新に失敗しました')
-      return
-    }
+        setError(response.message || 'ユーザー情報の更新に失敗しました')
+        return
+      }
 
       router.push(`/profile/${user.userId}`)
     })
