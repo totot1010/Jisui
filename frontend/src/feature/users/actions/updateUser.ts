@@ -1,7 +1,7 @@
 'use server'
 
 import { redirect } from "next/navigation"
-import { ApiClient, isApiError } from "@/api/api"
+import { ApiClient, ApiResponse, isApiError } from "@/api/api"
 import { UpdateUserRequestDto } from "../types/dtos/updateUserDto"
 
 export const updateUser = async (userId: string, request: UpdateUserRequestDto) => {
@@ -12,14 +12,16 @@ export const updateUser = async (userId: string, request: UpdateUserRequestDto) 
 
   if (!username || !email) {
     return {
-      success: false,
+      type: 'error',
+      status: 'error',
       message: 'ユーザー名とメールアドレスは必須です'
     }
   }
 
   if (password !== confirmPassword) {
     return {
-      success: false,
+      type: 'error',
+      status: 'error',
       message: 'パスワードが一致しません'
     }
   }
