@@ -3,6 +3,7 @@ import Link from "next/link"
 import { ChevronLeft } from "lucide-react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/shadcn/card"
 import { UserEdit } from '@/feature/users/components/UserEdit/UserEdit'
+import { UserEditFormSkeleton } from "@/feature/users/components/UserEditForm"
 
 export default async function Page({
   params,
@@ -23,7 +24,7 @@ export default async function Page({
         </CardHeader>
         <CardContent>
           <Suspense
-            fallback={<div>Loading...</div>}>
+            fallback={<UserEditFormSkeleton />}>
             <UserEdit userId={userId} />
           </Suspense>
         </CardContent>
