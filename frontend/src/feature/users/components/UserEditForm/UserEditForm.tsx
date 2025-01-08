@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useTransition } from 'react'
-import { useRouter } from 'next/navigation'
 import { Button } from "@/components/shadcn/button"
 import { Input } from "@/components/shadcn/input"
 import { Label } from "@/components/shadcn/label"
@@ -14,7 +13,6 @@ type UserEditFormProps = {
 
 export const UserEditForm = ({ user }: UserEditFormProps) => {
   const [isPending, startTransition] = useTransition()
-  const router = useRouter()
   const [formData, setFormData] = useState({
     username: user.username,
     email: user.email,
@@ -36,10 +34,7 @@ export const UserEditForm = ({ user }: UserEditFormProps) => {
       const response = await updateUser(user.userId, formData)
       if (response) {
         setError(response.message || 'ユーザー情報の更新に失敗しました')
-        return
       }
-
-      router.push(`/profile/${user.userId}`)
     })
   }
 
