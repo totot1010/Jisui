@@ -4,7 +4,9 @@ import { prisma } from "../prisma/prisma";
 import { Prisma, PrismaClient } from "@prisma/client";
 import { transactionContext } from "../prisma/transactionContext";
 import { Like } from "../../domain/post/entity/like.entity";
-
+import { UserId } from "../../domain/user/value_object";
+import { PostCountType } from "../../domain/post/types/postCountType";
+import { calculateOneDayAgo, calculateOneWeekAgo } from "../../shared/utils/datetimeHelper";
 
 export class PostRepository implements IPostRepository {
   private getClient(): Prisma.TransactionClient | PrismaClient {
@@ -33,6 +35,20 @@ export class PostRepository implements IPostRepository {
 
     return posts.map(post => {
       return Post.reConstruct(post.id, post.title, post.price, post.userId, post.createAt, post.updatedAt);
+    });
+  }
+
+  async countByUserIdAndType(userId: UserId, type: PostCountType): Promise<number> {
+    const client = this.getClient();
+    const startDate = this.getStartDate(type);
+
+    return await client.post.count({
+      where: {
+        userId: userId.value,
+        createAt: {
+          gte: startDate
+        }
+      },
     });
   }
 
@@ -68,5 +84,11 @@ export class PostRepository implements IPostRepository {
         }
       }
     });
+  }
+
+  private getStartDate(type: PostCountType): Date {
+    return type === 'day'
+      ? calculateOneDayAgo()
+      : calculateOneWeekAgo();
   }
 }
