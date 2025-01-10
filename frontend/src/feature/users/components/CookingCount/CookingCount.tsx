@@ -1,21 +1,19 @@
-'use client';
-
-import { useEffect, useState } from "react";
+import { ApiClient, isApiError } from "@/api/api";
 
 type CookingCountProps = {
-  targetPeriod: 'today' | 'week';
+  targetPeriod: 'day' | 'week';
   userId: string;
 }
 
-export const CookingCount = ({ }: CookingCountProps) => {
-  // TODO: ユーザーの料理数を取得する
-  const [cookingCount, setCookingCount] = useState<number>(0);
-  useEffect(() => {
-    // ハイドレーションエラー回避のため
-    setCookingCount(Math.floor(Math.random() * 4))
-  }, [setCookingCount])
+export const CookingCount = async ({ targetPeriod, userId }: CookingCountProps) => {
+  const response = await ApiClient().Get<{ type: 'day' | 'week' }, { count: number }>(`posts/${userId}/counts`, { type: targetPeriod })
+
+  if (isApiError(response)) {
+    // エラーテキストを表示する
+    return <p className="text-3xl font-bold text-red-500">{response.message || 'エラーが発生しました'}</p>
+  }
 
   return (
-    <p className="text-3xl font-bold text-primary-600">{cookingCount}</p>
+    <p className="text-3xl font-bold text-primary-600">{response.data.count}</p>
   );
 }

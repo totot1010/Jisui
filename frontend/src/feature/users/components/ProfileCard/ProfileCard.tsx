@@ -28,7 +28,7 @@ export const ProfileCard = async ({ userId }: ProfileCardProps) => {
           <div className="bg-gray-100 rounded-lg p-4">
             <h2 className="text-lg font-semibold mb-2">本日の自炊回数</h2>
             <Suspense fallback={<CookingCountSkeleton />}>
-              <CookingCount targetPeriod="today" userId={userId} />
+              <CookingCount targetPeriod="day" userId={userId} />
             </Suspense>
           </div>
           <div className="bg-gray-100 rounded-lg p-4">
