@@ -63,20 +63,6 @@ export class PostRepository implements IPostRepository {
     });
   }
 
-  async countByUserIdAndType(userId: UserId, type: PostCountType): Promise<number> {
-    const client = this.getClient();
-    const startDate = this.getStartDate(type);
-
-    return await client.post.count({
-      where: {
-        userId: userId.value,
-        createAt: {
-          gte: startDate
-        }
-      },
-    });
-  }
-
   async existsLikeByUserAndPost(like: Like): Promise<boolean> {
     const client = this.getClient();
     const postLike = await client.postLike.findFirst({

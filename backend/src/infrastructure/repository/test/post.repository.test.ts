@@ -55,7 +55,7 @@ describe('PostRepository', async () => {
     const userId = user.getUserId();
     const createAt = new Date();
     const updatedAt = new Date();
-    const post = new Post(postId, title, price, userId, createAt, updatedAt);
+    const post = new Post(postId, title, price, userId, createAt, updatedAt, []);
 
     const postId2 = PostId.generate();
     const title2 = new Title('title2');
@@ -63,7 +63,7 @@ describe('PostRepository', async () => {
     const userId2 = user.getUserId();
     const createAt2 = new Date();
     const updatedAt2 = new Date();
-    const post2 = new Post(postId2, title2, price2, userId2, createAt2, updatedAt2);
+    const post2 = new Post(postId2, title2, price2, userId2, createAt2, updatedAt2, []);
 
     await postRepository.create(post);
     await postRepository.create(post2);
@@ -100,8 +100,8 @@ describe('PostRepository', async () => {
     it('ユーザーIDとタイプに基づいて投稿のカウントを取得できること', transactionTest(async () => {
       // given
       await userRepository.create(user);
-      const post1 = new Post(PostId.generate(), new Title('title1'), new Price(100), user.getUserId(), new Date(), new Date());
-      const post2 = new Post(PostId.generate(), new Title('title2'), new Price(200), user.getUserId(), new Date(), new Date());
+      const post1 = new Post(PostId.generate(), new Title('title1'), new Price(100), user.getUserId(), new Date(), new Date(), []);
+      const post2 = new Post(PostId.generate(), new Title('title2'), new Price(200), user.getUserId(), new Date(), new Date(), []);
 
       await postRepository.create(post1);
       await postRepository.create(post2);
@@ -130,7 +130,7 @@ describe('PostRepository', async () => {
     const userId = user.getUserId();
     const createAt = new Date();
     const updatedAt = new Date();
-    const post = new Post(postId, title, price, userId, createAt, updatedAt);
+    const post = new Post(postId, title, price, userId, createAt, updatedAt, []);
 
       await postRepository.create(post);
       const like = new Like(userId, postId);
@@ -186,7 +186,7 @@ describe('PostRepository', async () => {
     const userId2 = user2.getUserId();
     const createAt2 = new Date();
     const updatedAt2 = new Date();
-    const post2 = new Post(postId2, title2, price2, userId2, createAt2, updatedAt2);
+    const post2 = new Post(postId2, title2, price2, userId2, createAt2, updatedAt2, []);
 
       await postRepository.create(post);
       await postRepository.create(post2);
