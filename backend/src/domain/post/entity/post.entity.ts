@@ -1,5 +1,6 @@
 import { UserId } from "../../user/value_object";
 import { PostId, Price, Title } from "../value_object";
+import { Like } from "./like.entity";
 
 export class Post {
   private readonly postId: PostId;
@@ -8,9 +9,9 @@ export class Post {
   private readonly userId: UserId;
   private createAt: Date;
   private updatedAt: Date;
+  private likes: Like[];
 
-  // TODO: いいね、コメント、画像の関連付けを実装する
-  // private likes: PostLike[];
+  // TODO: コメント、画像の関連付けを実装する
   // private comments: PostComment[];
   // private images: PostImage[];
 
@@ -20,7 +21,8 @@ export class Post {
     price: Price,
     userId: UserId,
     createAt: Date,
-    updatedAt: Date
+    updatedAt: Date,
+    likes: Like[]
   ) {
     this.postId = postId;
     this.title = title;
@@ -28,6 +30,7 @@ export class Post {
     this.userId = userId;
     this.createAt = createAt;
     this.updatedAt = updatedAt;
+    this.likes = likes;
   }
 
   // 永続化層から取得したデータをエンティティに変換する際に使用
@@ -37,7 +40,8 @@ export class Post {
     price: number,
     userId: string,
     createAt: Date,
-    updatedAt: Date
+    updatedAt: Date,
+    likes: Like[]
   ): Post {
     return new Post(
       new PostId(postId),
@@ -45,7 +49,8 @@ export class Post {
       new Price(price),
       new UserId(userId),
       createAt,
-      updatedAt
+      updatedAt,
+      likes
     );
   }
 
@@ -72,5 +77,9 @@ export class Post {
 
   public getUpdatedAt(): Date {
     return this.updatedAt;
+  }
+
+  public getLikes(): Like[] {
+    return this.likes;
   }
 }

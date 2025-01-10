@@ -35,7 +35,11 @@ export class UserUpdateService {
     const updatedEmail = new Email(email);
 
     const user = new User(targetUserId, updatedUsername, updatedEmail, updatedHashedPassword);
-    await this.checkUserDuplicationDomainService.execute(user.getEmail());
+    if (user.getEmail().value !== targetUser.getEmail().value) {
+      // メールアドレスが変更されている場合、ユーザーの重複チェックを行う
+      console.log("重複チェック");
+      await this.checkUserDuplicationDomainService.execute(user.getEmail());
+    }
 
     return await this.userRepository.update(user);
   }

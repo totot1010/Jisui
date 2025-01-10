@@ -6,6 +6,7 @@ export class getAllPostWithUserDto {
   public readonly username: string
   public readonly createAt: Date
   public readonly updatedAt: Date
+  public readonly likes: string[]
 
   constructor(
     postId: string,
@@ -14,7 +15,8 @@ export class getAllPostWithUserDto {
     userId: string,
     username: string,
     createAt: Date,
-    updatedAt: Date
+    updatedAt: Date,
+    likes: string[]
   ) {
     this.postId = postId;
     this.title = title;
@@ -23,5 +25,6 @@ export class getAllPostWithUserDto {
     this.username = username;
     this.createAt = createAt;
     this.updatedAt = updatedAt;
+    this.likes = likes;
   }
 };
