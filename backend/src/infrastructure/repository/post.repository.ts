@@ -4,9 +4,11 @@ import { prisma } from "../prisma/prisma";
 import { Prisma, PrismaClient } from "@prisma/client";
 import { transactionContext } from "../prisma/transactionContext";
 import { Like } from "../../domain/post/entity/like.entity";
-import { UserId } from "../../domain/user/value_object";
 import { PostCountType } from "../../domain/post/types/postCountType";
 import { calculateOneDayAgo, calculateOneWeekAgo } from "../../shared/utils/datetimeHelper";
+import { UserId } from "../../domain/user/value_object";
+import { PostId } from "../../domain/post/value_object";
+
 
 export class PostRepository implements IPostRepository {
   private getClient(): Prisma.TransactionClient | PrismaClient {
@@ -24,17 +26,40 @@ export class PostRepository implements IPostRepository {
       }
     });
 
-    return Post.reConstruct(id, title, price, userId, createAt, updatedAt);
+    return Post.reConstruct(id, title, price, userId, createAt, updatedAt, []);
   }
 
   async findAll(): Promise<Post[]> {
     const client = this.getClient();
-    const posts = await client.post.findMany(
-      { orderBy: { createAt: 'desc' } }
-    );
+    const posts = await client.post.findMany({
+      include: {
+        likes: {
+          select: {
+            userId: true,
+            postId: true
+          }
+        }
+      },
+      orderBy: { createAt: 'desc' }
+    });
 
     return posts.map(post => {
-      return Post.reConstruct(post.id, post.title, post.price, post.userId, post.createAt, post.updatedAt);
+      const likes = post.likes.map(like => new Like(new UserId(like.userId), new PostId(like.postId)));
+      return Post.reConstruct(post.id, post.title, post.price, post.userId, post.createAt, post.updatedAt, likes);
+    });
+  }
+
+  async countByUserIdAndType(userId: UserId, type: PostCountType): Promise<number> {
+    const client = this.getClient();
+    const startDate = this.getStartDate(type);
+
+    return await client.post.count({
+      where: {
+        userId: userId.value,
+        createAt: {
+          gte: startDate
+        }
+      },
     });
   }
 

@@ -5,6 +5,7 @@ import { UserDuplicationError } from '../../../../domain/user/exceptions/userDup
 import { User } from '../../../../domain/user/entity/user.entity';
 import { UserUpdateService } from '../../service/userUpdate.service';
 import { UpdateUserRequestDto } from '../../dto/updateUser.dto';
+import { Email, HashedPassword, UserId, Username } from '../../../../domain/user/value_object';
 
 
 describe('UserUpdateService', () => {
@@ -86,5 +87,43 @@ describe('UserUpdateService', () => {
     expect(result.getUserId().value).toBe(userId);
     expect(result.getEmail().value).toBe(email);
     expect(result.getUsername().value).toBe(username);
+  });
+
+  it('メールアドレスが変更されている場合は重複チェックが行われること', async () => {
+    // given
+    checkUserDuplicationDomainService.execute = vi.fn().mockResolvedValue(null);
+    userFakeRepository.findById = vi.fn().mockResolvedValue(new User(new UserId('userId'), new Username('testUser'), new Email('aaa@example.com'), new HashedPassword('password123')));
+    const userId = 'userId';
+    const email = 'test@example.com';
+    const username = 'testUser';
+    const password = 'password123';
+    const confirmPassword = password;
+    const updateUserDto = new UpdateUserRequestDto(userId, email, username, password, confirmPassword);
+
+    // when
+    const result = await userUpdateService.update(updateUserDto);
+
+    // then
+    expect(result).toBeInstanceOf(User);
+    expect(checkUserDuplicationDomainService.execute).toHaveBeenCalled();
+  });
+
+  it('メールアドレスが変更されていない場合は重複チェックが行われないこと', async () => {
+    // given
+    checkUserDuplicationDomainService.execute = vi.fn().mockResolvedValue(null);
+    userFakeRepository.findById = vi.fn().mockResolvedValue(new User(new UserId('userId'), new Username('testUser'), new Email('test@example.com'), new HashedPassword('password123')));
+    const userId = 'userId';
+    const email = 'test@example.com';
+    const username = 'testUser';
+    const password = 'password123';
+    const confirmPassword = password;
+    const updateUserDto = new UpdateUserRequestDto(userId, email, username, password, confirmPassword);
+
+    // when
+    const result = await userUpdateService.update(updateUserDto);
+
+    // then
+    expect(result).toBeInstanceOf(User);
+    expect(checkUserDuplicationDomainService.execute).not.toHaveBeenCalled();
   });
 });
