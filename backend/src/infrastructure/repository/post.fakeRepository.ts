@@ -1,6 +1,8 @@
 import { Like } from "../../domain/post/entity/like.entity";
 import { Post } from "../../domain/post/entity/post.entity";
 import { IPostRepository } from "../../domain/post/repository/post.repository";
+import { PostCountType } from "../../domain/post/types/postCountType";
+import { UserId } from "../../domain/user/value_object";
 
 
 export class PostFakeRepository implements IPostRepository {
@@ -22,6 +24,9 @@ export class PostFakeRepository implements IPostRepository {
     return [post1, post2];
   }
 
+  async countByUserIdAndType(userId: UserId, type: PostCountType): Promise<number> {
+    return 10;
+  }
 
   async existsLikeByUserAndPost(like: Like): Promise<boolean> {
     return true

@@ -1,6 +1,7 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { PostQueryService } from "../service/postQuery.service";
 import { PostFakeRepository } from "../../../infrastructure/repository/post.fakeRepository";
+import { UserId } from "../../../domain/user/value_object";
 
 describe('PostQueryService', () => {
   const postFakeRepository = new PostFakeRepository();
@@ -33,6 +34,19 @@ describe('PostQueryService', () => {
       expect(post2.getPrice().value).toBe(200);
       expect(post1.getUserId().value).toBe('userId1');
       expect(post2.getUserId().value).toBe('userId2');
+    });
+  });
+
+  describe('countByUserIdAndType', () => {
+    it('ユーザーIDとタイプに基づいて投稿のカウントを取得できること', async () => {
+      // given
+      postFakeRepository.countByUserIdAndType = vi.fn().mockResolvedValue(2);
+      const userId = UserId.generate();
+      // when
+      const countDay = await postQueryService.countByUserIdAndType(userId.value, 'day');
+
+      // then
+      expect(countDay).toBe(2);
     });
   });
 });

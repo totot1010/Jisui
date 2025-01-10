@@ -8,6 +8,7 @@ import { requiredAuth } from "./middleware";
 import { HttpStatus } from "../shared/constants/statusCode";
 import { LikePostRequestDto } from "../application/post/dto/likePost.dto";
 import { PostLikeService } from "../application/post/service/postLike.service";
+import { isPostCountType } from "../domain/post/types/postCountType";
 
 const post = new Hono().basePath("/posts");
 
@@ -51,6 +52,20 @@ post.get("/:id", (c) => {
 post.get("/:userId", (c) => {
   const userId = c.req.param('userId')
   return c.json({ message: `post with userId ${userId}` }, HttpStatus.OK);
+});
+
+post.get("/:userId/counts", async (c) => {
+  const userId = c.req.param('userId')
+  const type = c.req.query('type')
+  if (!type) {
+    return c.json({ message: "type is required" }, HttpStatus.BAD_REQUEST);
+  }
+  if (!isPostCountType(type)) {
+    return c.json({ message: "type is invalid" }, HttpStatus.BAD_REQUEST);
+  }
+
+  const postCount = await postQueryService.countByUserIdAndType(userId, type);
+  return c.json({ count: postCount }, HttpStatus.OK);
 });
 
 post.delete("/", (c) => {
