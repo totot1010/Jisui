@@ -15,7 +15,7 @@ export const PostCard = ({ post }: PostCardProps) => {
             {post.username[0]}
           </div>
           <div>
-            <Link href={"/profile"}>
+            <Link href={`/profile/${post.userId}`}>
               <span className="font-semibold text-lg block">{post.username}</span>
             </Link>
           </div>

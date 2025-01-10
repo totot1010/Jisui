@@ -36,7 +36,7 @@ export const UserInfo = async ({ userId }: UserInfoProps) => {
 
       {isMyself && (
         <Link
-          href="/profile/edit"
+          href={`/profile/${userId}/edit`}
           className="absolute top-0 right-0 bg-black text-white px-4 py-2 rounded-full hover:bg-gray-800 transition-colors duration-200 flex items-center text-sm"
         >
           <Edit size={16} className="mr-1" />
