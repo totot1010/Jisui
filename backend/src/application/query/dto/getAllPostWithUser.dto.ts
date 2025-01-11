@@ -1,3 +1,10 @@
+export type PostCommentDto = {
+  readonly id: string
+  readonly userId: string
+  readonly username: string
+  readonly content: string
+}
+
 export class getAllPostWithUserDto {
   public readonly postId: string
   public readonly title: string
@@ -7,7 +14,7 @@ export class getAllPostWithUserDto {
   public readonly createAt: Date
   public readonly updatedAt: Date
   public readonly likes: string[]
-  public readonly existsComment: boolean
+  public readonly comments: PostCommentDto[]
 
   constructor(
     postId: string,
@@ -18,7 +25,7 @@ export class getAllPostWithUserDto {
     createAt: Date,
     updatedAt: Date,
     likes: string[],
-    existsComment: boolean
+    comments: PostCommentDto[]
   ) {
     this.postId = postId;
     this.title = title;
@@ -28,6 +35,6 @@ export class getAllPostWithUserDto {
     this.createAt = createAt;
     this.updatedAt = updatedAt;
     this.likes = likes;
-    this.existsComment = existsComment;
+    this.comments = comments;
   }
 };
