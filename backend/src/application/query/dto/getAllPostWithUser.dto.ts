@@ -7,6 +7,7 @@ export class getAllPostWithUserDto {
   public readonly createAt: Date
   public readonly updatedAt: Date
   public readonly likes: string[]
+  public readonly existsComment: boolean
 
   constructor(
     postId: string,
@@ -16,7 +17,8 @@ export class getAllPostWithUserDto {
     username: string,
     createAt: Date,
     updatedAt: Date,
-    likes: string[]
+    likes: string[],
+    existsComment: boolean
   ) {
     this.postId = postId;
     this.title = title;
@@ -26,5 +28,6 @@ export class getAllPostWithUserDto {
     this.createAt = createAt;
     this.updatedAt = updatedAt;
     this.likes = likes;
+    this.existsComment = existsComment;
   }
 };

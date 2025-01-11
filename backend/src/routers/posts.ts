@@ -53,9 +53,9 @@ post.post("/:id/comments", async (c) => {
   }
 
   const createCommentService = new CreateCommentService(postRepository);
-  const comment = await createCommentService.execute(new CreateCommentRequestDto(postId, userId, content));
+  await createCommentService.execute(new CreateCommentRequestDto(postId, userId, content));
 
-  return c.json(comment, HttpStatus.CREATED);
+  return c.json({ message: "comment created" }, HttpStatus.CREATED);
 });
 
 // みんなの投稿

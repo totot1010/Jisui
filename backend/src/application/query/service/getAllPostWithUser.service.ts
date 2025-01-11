@@ -29,7 +29,8 @@ export class GetAllPostWithUserService {
         user.getUsername().value,
         post.getCreateAt(),
         post.getUpdatedAt(),
-        post.getLikes().map(like => like.getUserId().value)
+        post.getLikes().map(like => like.getUserId().value),
+        post.getComments().length > 0
       ));
     }
 
