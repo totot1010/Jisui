@@ -11,6 +11,8 @@ import { PostLikeService } from "../application/post/service/postLike.service";
 import { isPostCountType } from "../domain/post/types/postCountType";
 import { CreateCommentService } from "../application/post/service/createComment.service";
 import { CreateCommentRequestDto } from "../application/post/dto/createComment.dto";
+import { ValidationError } from "../shared/exceptions/validationError";
+import { HTTPException } from "hono/http-exception";
 
 
 // c.getで取得するパラメータの型
@@ -19,6 +21,15 @@ type Variables = {
 }
 
 const post = new Hono<{ Variables: Variables }>().basePath("/posts");
+post.onError((error: any, c) => {
+  if (error instanceof ValidationError) {
+    return c.json({ message: String(error.message) }, HttpStatus.BAD_REQUEST);
+  }
+  if (error instanceof HTTPException) {
+    return error.getResponse();
+  }
+  return c.json({ message: "Internal Server Error" }, HttpStatus.INTERNAL_SERVER_ERROR);
+});
 
 post.use(requiredAuth);
 
