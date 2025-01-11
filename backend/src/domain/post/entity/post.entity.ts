@@ -10,9 +10,9 @@ export class Post {
   private createAt: Date;
   private updatedAt: Date;
   private likes: Like[];
+  private comments: Comment[];
 
-  // TODO: コメント、画像の関連付けを実装する
-  // private comments: PostComment[];
+  // TODO: 画像の関連付けを実装する
   // private images: PostImage[];
 
   constructor(
@@ -22,7 +22,8 @@ export class Post {
     userId: UserId,
     createAt: Date,
     updatedAt: Date,
-    likes: Like[]
+    likes: Like[] = [],
+    comments: Comment[] = []
   ) {
     this.postId = postId;
     this.title = title;
@@ -31,6 +32,7 @@ export class Post {
     this.createAt = createAt;
     this.updatedAt = updatedAt;
     this.likes = likes;
+    this.comments = comments;
   }
 
   // 永続化層から取得したデータをエンティティに変換する際に使用
@@ -41,7 +43,8 @@ export class Post {
     userId: string,
     createAt: Date,
     updatedAt: Date,
-    likes: Like[]
+    likes: Like[] = [],
+    comments: Comment[] = []
   ): Post {
     return new Post(
       new PostId(postId),
@@ -50,7 +53,8 @@ export class Post {
       new UserId(userId),
       createAt,
       updatedAt,
-      likes
+      likes,
+      comments
     );
   }
 
@@ -81,5 +85,9 @@ export class Post {
 
   public getLikes(): Like[] {
     return this.likes;
+  }
+
+  public getComments(): Comment[] {
+    return this.comments;
   }
 }
