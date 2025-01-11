@@ -276,7 +276,11 @@ describe('PostRepository', async () => {
       await postRepository.createComment(comment);
 
       // then
-      // TODO: コメントが作成されていることを確認する
+      const result = await postRepository.findAll();
+      expect(result).toHaveLength(1);
+      expect(result[0].getComments()).toHaveLength(1);
+      expect(result[0].getComments()[0].getCommentId().value).toBe(commentId.value);
+      expect(result[0].getComments()[0].getContent().value).toBe(content.value);
     }));
   });
 });
