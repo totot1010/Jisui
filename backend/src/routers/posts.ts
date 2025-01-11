@@ -65,7 +65,6 @@ post.get("/", async (c) => {
   return c.json(results, HttpStatus.OK);
 });
 
-
 post.get("/:id", (c) => {
   const id = c.req.param('id')
   return c.json({ message: `post with id ${id}` }, HttpStatus.OK);
