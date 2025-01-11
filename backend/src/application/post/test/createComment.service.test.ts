@@ -1,0 +1,32 @@
+import { describe, expect, it, vi } from "vitest";
+import { CreateCommentService } from "../service/createComment.service";
+import { PostFakeRepository } from '../../../infrastructure/repository/post.fakeRepository';
+import { CreateCommentRequestDto } from "../dto/createComment.dto";
+import { Comment } from "../../../domain/post/entity/comment.entity";
+import { PostId } from "../../../domain/post/value_object";
+import { UserId } from "../../../domain/user/value_object";
+import { CommentContent } from "../../../domain/post/value_object/commentContent";
+
+describe('CreateCommentService', () => {
+  const postFakeRepository = new PostFakeRepository();
+  const createCommentService = new CreateCommentService(postFakeRepository);
+
+  it('投稿にコメントを作成できること', async () => {
+    // given
+    const createCommentSpy = vi.spyOn(postFakeRepository, 'createComment');
+    const postId = PostId.generate().value;
+    const userId = UserId.generate().value;
+    const content = new CommentContent('これはテストコメントです。');
+    const createCommentRequestDto = new CreateCommentRequestDto(postId, userId, content.value);
+
+    // when
+    const comment = await createCommentService.execute(createCommentRequestDto);
+
+    // then
+    expect(createCommentSpy).toHaveBeenCalled();
+    expect(comment).toBeInstanceOf(Comment);
+    expect(comment.getPostId().value).toBe(postId);
+    expect(comment.getUserId().value).toBe(userId);
+    expect(comment.getContent().value).toBe(content.value);
+  });
+});
