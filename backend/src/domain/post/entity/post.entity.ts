@@ -1,5 +1,6 @@
 import { UserId } from "../../user/value_object";
 import { PostId, Price, Title } from "../value_object";
+import { Comment } from "./comment.entity";
 import { Like } from "./like.entity";
 
 export class Post {

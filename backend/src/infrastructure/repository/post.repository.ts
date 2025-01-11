@@ -39,6 +39,14 @@ export class PostRepository implements IPostRepository {
             userId: true,
             postId: true
           }
+        },
+        comments: {
+          select: {
+            id: true,
+            postId: true,
+            userId: true,
+            content: true
+          }
         }
       },
       orderBy: { createAt: 'desc' }
@@ -46,7 +54,8 @@ export class PostRepository implements IPostRepository {
 
     return posts.map(post => {
       const likes = post.likes.map(like => new Like(new UserId(like.userId), new PostId(like.postId)));
-      return Post.reConstruct(post.id, post.title, post.price, post.userId, post.createAt, post.updatedAt, likes);
+      const comments = post.comments.map(comment => Comment.reConstruct(comment.id, comment.postId, comment.userId, comment.content));
+      return Post.reConstruct(post.id, post.title, post.price, post.userId, post.createAt, post.updatedAt, likes, comments);
     });
   }
 
