@@ -9,8 +9,16 @@ import { HttpStatus } from "../shared/constants/statusCode";
 import { LikePostRequestDto } from "../application/post/dto/likePost.dto";
 import { PostLikeService } from "../application/post/service/postLike.service";
 import { isPostCountType } from "../domain/post/types/postCountType";
+import { CreateCommentService } from "../application/post/service/createComment.service";
+import { CreateCommentRequestDto } from "../application/post/dto/createComment.dto";
 
-const post = new Hono().basePath("/posts");
+
+// c.getで取得するパラメータの型
+type Variables = {
+  userId?: string
+}
+
+const post = new Hono<{ Variables: Variables }>().basePath("/posts");
 
 post.use(requiredAuth);
 
@@ -33,8 +41,21 @@ post.post("/likes", async (c) => {
   return c.json({ message: "" }, HttpStatus.OK);
 });
 
-post.post("/comments", (c) => {
-  return c.json({ message: "comment created" }, HttpStatus.OK);
+post.post("/:id/comments", async (c) => {
+  // ユーザーのコメントを作成する
+  const postId = c.req.param('id');
+  const userId = c.get('userId');
+  const body = await c.req.json();
+  const { content } = body;
+
+  if (!postId || !userId) {
+    return c.json({ message: "postId, userId is required" }, HttpStatus.BAD_REQUEST);
+  }
+
+  const createCommentService = new CreateCommentService(postRepository);
+  const comment = await createCommentService.execute(new CreateCommentRequestDto(postId, userId, content));
+
+  return c.json(comment, HttpStatus.CREATED);
 });
 
 // みんなの投稿
@@ -43,6 +64,7 @@ post.get("/", async (c) => {
   const results = await getAllPostWithUserService.execute();
   return c.json(results, HttpStatus.OK);
 });
+
 
 post.get("/:id", (c) => {
   const id = c.req.param('id')

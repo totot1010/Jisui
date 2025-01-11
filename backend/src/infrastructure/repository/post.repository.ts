@@ -8,6 +8,7 @@ import { PostCountType } from "../../domain/post/types/postCountType";
 import { calculateOneDayAgo, calculateOneWeekAgo } from "../../shared/utils/datetimeHelper";
 import { UserId } from "../../domain/user/value_object";
 import { PostId } from "../../domain/post/value_object";
+import { Comment } from "../../domain/post/entity/comment.entity";
 
 
 export class PostRepository implements IPostRepository {
@@ -93,6 +94,18 @@ export class PostRepository implements IPostRepository {
           userId: existingLike.getUserId().value,
           postId: existingLike.getPostId().value,
         }
+      }
+    });
+  }
+
+  async createComment(comment: Comment): Promise<void> {
+    const client = this.getClient();
+    await client.postComment.create({
+      data: {
+        id: comment.getCommentId().value,
+        postId: comment.getPostId().value,
+        userId: comment.getUserId().value,
+        content: comment.getContent().value,
       }
     });
   }
