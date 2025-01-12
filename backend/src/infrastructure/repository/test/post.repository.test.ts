@@ -282,7 +282,8 @@ describe('PostRepository', async () => {
       expect(result[0].getComments()[0].getCommentId().value).toBe(commentId.value);
       expect(result[0].getComments()[0].getContent().value).toBe(content.value);
       expect(result[0].getComments()[0].getCreatedAt()).toBeInstanceOf(Date);
-      expect(result[0].getComments()[0].getUpdatedAt()).toBeUndefined();
+      // prismaはupdatedAtが作成時に設定される
+      expect(result[0].getComments()[0].getUpdatedAt()).toBeInstanceOf(Date);
     }));
   });
 });
