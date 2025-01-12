@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt';
 
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { PostId, Price, Title } from "../../../domain/post/value_object";
+import { CommentContent, CommentId, PostId, Price, Title } from "../../../domain/post/value_object";
 import { UserId } from "../../../domain/user/value_object";
 import { Post } from "../../../domain/post/entity/post.entity";
 import { PostRepository } from "../post.repository";
@@ -10,6 +10,7 @@ import { User } from '../../../domain/user/entity/user.entity';
 import { UserRepository } from '../user.repository';
 import { transactionTest } from './transactionTest';
 import { Like } from '../../../domain/post/entity/like.entity';
+import { Comment } from '../../../domain/post/entity/comment.entity';
 
 
 describe('PostRepository', async () => {
@@ -53,17 +54,17 @@ describe('PostRepository', async () => {
       const title = new Title('title');
       const price = new Price(1000);
       const userId = user.getUserId();
-      const createAt = new Date();
+      const createdAt = new Date();
       const updatedAt = new Date();
-      const post = new Post(postId, title, price, userId, createAt, updatedAt, []);
+      const post = new Post(postId, title, price, userId, createdAt, updatedAt, []);
 
       const postId2 = PostId.generate();
       const title2 = new Title('title2');
       const price2 = new Price(2000);
       const userId2 = user2.getUserId();
-      const createAt2 = new Date();
+      const createdAt2 = new Date();
       const updatedAt2 = new Date();
-      const post2 = new Post(postId2, title2, price2, userId2, createAt2, updatedAt2, []);
+      const post2 = new Post(postId2, title2, price2, userId2, createdAt2, updatedAt2, []);
 
       await postRepository.create(post);
       await postRepository.create(post2);
@@ -132,9 +133,9 @@ describe('PostRepository', async () => {
       const title = new Title('title');
       const price = new Price(1000);
       const userId = user.getUserId();
-      const createAt = new Date();
+      const createdAt = new Date();
       const updatedAt = new Date();
-      const post = new Post(postId, title, price, userId, createAt, updatedAt, []);
+      const post = new Post(postId, title, price, userId, createdAt, updatedAt, []);
 
       await postRepository.create(post);
       const like = new Like(userId, postId);
@@ -155,9 +156,9 @@ describe('PostRepository', async () => {
       const title = new Title('title');
       const price = new Price(1000);
       const userId = user.getUserId();
-      const createAt = new Date();
+      const createdAt = new Date();
       const updatedAt = new Date();
-      const post = new Post(postId, title, price, userId, createAt, updatedAt, []);
+      const post = new Post(postId, title, price, userId, createdAt, updatedAt, []);
 
       await postRepository.create(post);
       const like = new Like(userId, postId);
@@ -180,17 +181,17 @@ describe('PostRepository', async () => {
       const title = new Title('title');
       const price = new Price(1000);
       const userId = user.getUserId();
-      const createAt = new Date();
+      const createdAt = new Date();
       const updatedAt = new Date();
-      const post = new Post(postId, title, price, userId, createAt, updatedAt, []);
+      const post = new Post(postId, title, price, userId, createdAt, updatedAt, []);
 
       const postId2 = PostId.generate();
       const title2 = new Title('title2');
       const price2 = new Price(2000);
       const userId2 = user2.getUserId();
-      const createAt2 = new Date();
+      const createdAt2 = new Date();
       const updatedAt2 = new Date();
-      const post2 = new Post(postId2, title2, price2, userId2, createAt2, updatedAt2, []);
+      const post2 = new Post(postId2, title2, price2, userId2, createdAt2, updatedAt2, []);
 
       await postRepository.create(post);
       await postRepository.create(post2);
@@ -218,17 +219,17 @@ describe('PostRepository', async () => {
         const title = new Title('title');
         const price = new Price(1000);
         const userId = user.getUserId();
-        const createAt = new Date();
+        const createdAt = new Date();
         const updatedAt = new Date();
-        const post = new Post(postId, title, price, userId, createAt, updatedAt, []);
+        const post = new Post(postId, title, price, userId, createdAt, updatedAt, []);
 
         const postId2 = PostId.generate();
         const title2 = new Title('title2');
         const price2 = new Price(2000);
         const userId2 = user2.getUserId();
-        const createAt2 = new Date();
+        const createdAt2 = new Date();
         const updatedAt2 = new Date();
-        const post2 = new Post(postId2, title2, price2, userId2, createAt2, updatedAt2, []);
+        const post2 = new Post(postId2, title2, price2, userId2, createdAt2, updatedAt2, []);
 
         await postRepository.create(post);
         await postRepository.create(post2);
@@ -249,5 +250,40 @@ describe('PostRepository', async () => {
         expect(result2).toBeFalsy();
       }));
     });
+  });
+
+  describe('createComment', () => {
+    it('投稿にコメントを作成できること', transactionTest(async () => {
+      // given
+      await userRepository.create(user);
+      await userRepository.create(user2);
+
+      const postId = PostId.generate();
+      const title = new Title('title');
+      const price = new Price(1000);
+      const userId = user.getUserId();
+      const createdAt = new Date();
+      const updatedAt = new Date();
+      const post = new Post(postId, title, price, userId, createdAt, updatedAt, []);
+
+      await postRepository.create(post);
+
+      const commentId = CommentId.generate();
+      const content = new CommentContent('content');
+      const comment = new Comment(commentId, postId, userId, content, new Date(), undefined);
+
+      // when
+      await postRepository.createComment(comment);
+
+      // then
+      const result = await postRepository.findAll();
+      expect(result).toHaveLength(1);
+      expect(result[0].getComments()).toHaveLength(1);
+      expect(result[0].getComments()[0].getCommentId().value).toBe(commentId.value);
+      expect(result[0].getComments()[0].getContent().value).toBe(content.value);
+      expect(result[0].getComments()[0].getCreatedAt()).toBeInstanceOf(Date);
+      // prismaはupdatedAtが作成時に設定される
+      expect(result[0].getComments()[0].getUpdatedAt()).toBeInstanceOf(Date);
+    }));
   });
 });

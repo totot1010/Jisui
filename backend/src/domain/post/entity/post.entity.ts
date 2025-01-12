@@ -1,5 +1,6 @@
 import { UserId } from "../../user/value_object";
 import { PostId, Price, Title } from "../value_object";
+import { Comment } from "./comment.entity";
 import { Like } from "./like.entity";
 
 export class Post {
@@ -7,12 +8,12 @@ export class Post {
   private title: Title;
   private price: Price;
   private readonly userId: UserId;
-  private createAt: Date;
+  private createdAt: Date;
   private updatedAt: Date;
   private likes: Like[];
+  private comments: Comment[];
 
-  // TODO: コメント、画像の関連付けを実装する
-  // private comments: PostComment[];
+  // TODO: 画像の関連付けを実装する
   // private images: PostImage[];
 
   constructor(
@@ -20,17 +21,19 @@ export class Post {
     title: Title,
     price: Price,
     userId: UserId,
-    createAt: Date,
+    createdAt: Date,
     updatedAt: Date,
-    likes: Like[]
+    likes: Like[] = [],
+    comments: Comment[] = []
   ) {
     this.postId = postId;
     this.title = title;
     this.price = price;
     this.userId = userId;
-    this.createAt = createAt;
+    this.createdAt = createdAt;
     this.updatedAt = updatedAt;
     this.likes = likes;
+    this.comments = comments;
   }
 
   // 永続化層から取得したデータをエンティティに変換する際に使用
@@ -39,18 +42,20 @@ export class Post {
     title: string,
     price: number,
     userId: string,
-    createAt: Date,
+    createdAt: Date,
     updatedAt: Date,
-    likes: Like[]
+    likes: Like[] = [],
+    comments: Comment[] = []
   ): Post {
     return new Post(
       new PostId(postId),
       new Title(title),
       new Price(price),
       new UserId(userId),
-      createAt,
+      createdAt,
       updatedAt,
-      likes
+      likes,
+      comments
     );
   }
 
@@ -71,8 +76,8 @@ export class Post {
     return this.userId;
   }
 
-  public getCreateAt(): Date {
-    return this.createAt;
+  public getCreatedAt(): Date {
+    return this.createdAt;
   }
 
   public getUpdatedAt(): Date {
@@ -81,5 +86,9 @@ export class Post {
 
   public getLikes(): Like[] {
     return this.likes;
+  }
+
+  public getComments(): Comment[] {
+    return this.comments;
   }
 }

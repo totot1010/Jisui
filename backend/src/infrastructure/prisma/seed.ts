@@ -62,6 +62,44 @@ async function main() {
     await prisma.post.createMany({
       data: posts
     });
+
+    // コメントを3件作成
+    const comments = [
+      {
+        id: v4(),
+        postId: posts[0].id,
+        userId: user.id,
+        content: "comment1",
+      },
+      {
+        id: v4(),
+        postId: posts[1].id,
+        userId: user.id,
+        content: "comment2",
+      },
+      {
+        id: v4(),
+        postId: posts[2].id,
+        userId: user.id,
+        content: "comment3",
+      }
+    ];
+
+    await prisma.postComment.createMany({
+      data: comments
+    });
+
+    // いいねを1件作成
+    const likes = [
+      {
+        id: v4(),
+        postId: posts[0].id,
+        userId: user.id,
+      }
+    ];
+    await prisma.postLike.createMany({
+      data: likes
+    });
   }
 
   console.log('create data done');

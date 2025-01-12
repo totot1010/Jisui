@@ -21,8 +21,8 @@ describe('PostQueryService', () => {
       expect(post2.getPrice().value).toBe(200);
       expect(post1.getUserId().value).toBe('userId1');
       expect(post2.getUserId().value).toBe('userId2');
-      expect(post1.getCreateAt()).toBeInstanceOf(Date);
-      expect(post2.getCreateAt()).toBeInstanceOf(Date);
+      expect(post1.getCreatedAt()).toBeInstanceOf(Date);
+      expect(post2.getCreatedAt()).toBeInstanceOf(Date);
       expect(post1.getUpdatedAt()).toBeInstanceOf(Date);
       expect(post2.getUpdatedAt()).toBeInstanceOf(Date);
 
