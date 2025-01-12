@@ -1,10 +1,18 @@
 import { ApiClient, isApiError } from "@/api/api";
 import { Post } from "../../types";
 import { PostCard } from "../PostCard";
+import { cookies } from "next/headers";
 
 export const AllPostList = async () => {
-  const response = await ApiClient().Get<undefined, Post[]>('posts');
+  const cookieStore = await cookies();
+  const loginUserId = cookieStore.get('userId')?.value;
 
+  if (!loginUserId) {
+    // 基本的にはエラーは発生しないが、型エラーを回避するためにthrowしている
+    throw new Error('userIdが取得できませんでした');
+  }
+  
+  const response = await ApiClient().Get<undefined, Post[]>('posts', undefined, true, { next: { tags: ['GetAllPostList'] } });
   if (isApiError(response)) {
     return <div>{response.message}</div>;
   }
@@ -14,7 +22,7 @@ export const AllPostList = async () => {
   return (
     <main className="space-y-8">
       {posts.map((post: Post) => (
-        <PostCard key={post.postId} post={post} />
+        <PostCard key={post.postId} post={post} loginUserId={loginUserId}/>
       ))}
     </main>
   )
