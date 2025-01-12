@@ -3,6 +3,8 @@ export type PostCommentDto = {
   readonly userId: string
   readonly username: string
   readonly content: string
+  readonly createdAt: Date
+  readonly updatedAt: Date | undefined
 }
 
 export class getAllPostWithUserDto {

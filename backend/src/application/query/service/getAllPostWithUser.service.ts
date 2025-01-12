@@ -48,6 +48,8 @@ export class GetAllPostWithUserService {
         userId: comment.getUserId().value,
         username: user.getUsername().value,
         content: comment.getContent().value,
+        createdAt: comment.getCreatedAt(),
+        updatedAt: comment.getUpdatedAt(),
       };
     });
   }
