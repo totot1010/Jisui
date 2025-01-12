@@ -76,7 +76,7 @@ export class Post {
     return this.userId;
   }
 
-  public getcreatedAt(): Date {
+  public getCreatedAt(): Date {
     return this.createdAt;
   }
 

@@ -23,7 +23,7 @@ describe('PostEntity', () => {
     expect(post.getTitle().value).toBe(title.value);
     expect(post.getPrice().value).toBe(price.value);
     expect(post.getUserId().value).toBe(userId.value);
-    expect(post.getcreatedAt()).toBe(createdAt);
+    expect(post.getCreatedAt()).toBe(createdAt);
     expect(post.getUpdatedAt()).toBe(updatedAt);
     expect(post.getLikes()).toBe(likes);
   });
@@ -46,7 +46,7 @@ describe('PostEntity', () => {
     expect(post.getTitle().value).toBe(titleValue);
     expect(post.getPrice().value).toBe(priceValue);
     expect(post.getUserId().value).toBe(userIdValue);
-    expect(post.getcreatedAt()).toBe(createdAt);
+    expect(post.getCreatedAt()).toBe(createdAt);
     expect(post.getUpdatedAt()).toBe(updatedAt);
     expect(post.getLikes()).toBe(likes);
   });
