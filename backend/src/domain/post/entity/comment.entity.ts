@@ -7,12 +7,16 @@ export class Comment {
   private readonly postId: PostId;
   private readonly userId: UserId;
   private readonly content: CommentContent;
+  private readonly createdAt: Date;
+  private readonly updatedAt?: Date;
 
-  constructor(id: CommentId, postId: PostId, userId: UserId, content: CommentContent) {
+  constructor(id: CommentId, postId: PostId, userId: UserId, content: CommentContent, createdAt: Date, updatedAt?: Date) {
     this.id = id;
     this.postId = postId;
     this.userId = userId;
     this.content = content;
+    this.createdAt = createdAt;
+    this.updatedAt = updatedAt;
   }
 
   public getCommentId(): CommentId {
@@ -31,12 +35,22 @@ export class Comment {
     return this.content;
   }
 
-  public static reConstruct(id: string, postId: string, userId: string, content: string): Comment {
+  public getCreatedAt(): Date {
+    return this.createdAt;
+  }
+
+  public getUpdatedAt(): Date | undefined {
+    return this.updatedAt;
+  }
+
+  public static reConstruct(id: string, postId: string, userId: string, content: string, createdAt: Date, updatedAt?: Date): Comment {
     return new Comment(
       new CommentId(id),
       new PostId(postId),
       new UserId(userId),
       new CommentContent(content),
+      createdAt,
+      updatedAt,
     );
   }
 }

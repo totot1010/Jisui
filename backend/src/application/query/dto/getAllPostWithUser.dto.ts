@@ -11,7 +11,7 @@ export class getAllPostWithUserDto {
   public readonly price: number
   public readonly userId: string
   public readonly username: string
-  public readonly createAt: Date
+  public readonly createdAt: Date
   public readonly updatedAt: Date
   public readonly likes: string[]
   public readonly comments: PostCommentDto[]
@@ -22,7 +22,7 @@ export class getAllPostWithUserDto {
     price: number,
     userId: string,
     username: string,
-    createAt: Date,
+    createdAt: Date,
     updatedAt: Date,
     likes: string[],
     comments: PostCommentDto[]
@@ -32,7 +32,7 @@ export class getAllPostWithUserDto {
     this.price = price;
     this.userId = userId;
     this.username = username;
-    this.createAt = createAt;
+    this.createdAt = createdAt;
     this.updatedAt = updatedAt;
     this.likes = likes;
     this.comments = comments;

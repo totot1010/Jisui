@@ -11,13 +11,15 @@ describe('CommentEntity', () => {
     const content = new CommentContent('これはテストコメントです。');
 
     // when
-    const comment = new Comment(commentId, postId, userId, content);
+    const comment = new Comment(commentId, postId, userId, content, new Date(), undefined);
 
     // then
     expect(comment.getCommentId().value).toBe(commentId.value);
     expect(comment.getPostId().value).toBe(postId.value);
     expect(comment.getUserId().value).toBe(userId.value);
     expect(comment.getContent().value).toBe(content.value);
+    expect(comment.getCreatedAt()).toBeInstanceOf(Date);
+    expect(comment.getUpdatedAt()).toBeUndefined();
   });
 
   it('永続化層から取得したデータをエンティティに変換できること', () => {
@@ -28,12 +30,14 @@ describe('CommentEntity', () => {
     const contentValue = 'これはテストコメントです。';
 
     // when
-    const comment = Comment.reConstruct(commentIdValue, postIdValue, userIdValue, contentValue);
+    const comment = Comment.reConstruct(commentIdValue, postIdValue, userIdValue, contentValue, new Date(), new Date());
 
     // then
     expect(comment.getCommentId().value).toBe(commentIdValue);
     expect(comment.getPostId().value).toBe(postIdValue);
     expect(comment.getUserId().value).toBe(userIdValue);
     expect(comment.getContent().value).toBe(contentValue);
+    expect(comment.getCreatedAt()).toBeInstanceOf(Date);
+    expect(comment.getUpdatedAt()).toBeInstanceOf(Date);
   });
 });

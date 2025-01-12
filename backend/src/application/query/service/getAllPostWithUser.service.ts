@@ -27,7 +27,7 @@ export class GetAllPostWithUserService {
         post.getPrice().value,
         post.getUserId().value,
         user.getUsername().value,
-        post.getCreateAt(),
+        post.getcreatedAt(),
         post.getUpdatedAt(),
         post.getLikes().map(like => like.getUserId().value),
         this.getComments(post, users)

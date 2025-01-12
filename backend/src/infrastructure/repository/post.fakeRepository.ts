@@ -13,10 +13,10 @@ export class PostFakeRepository implements IPostRepository {
     const title = 'title';
     const price = 100;
     const userId = 'userId';
-    const createAt = new Date();
+    const createdAt = new Date();
     const updatedAt = new Date();
 
-    return Post.reConstruct(id, title, price, userId, createAt, updatedAt, []);
+    return Post.reConstruct(id, title, price, userId, createdAt, updatedAt, []);
   }
 
   async findAll(): Promise<Post[]> {

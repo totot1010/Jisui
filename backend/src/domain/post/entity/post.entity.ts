@@ -8,7 +8,7 @@ export class Post {
   private title: Title;
   private price: Price;
   private readonly userId: UserId;
-  private createAt: Date;
+  private createdAt: Date;
   private updatedAt: Date;
   private likes: Like[];
   private comments: Comment[];
@@ -21,7 +21,7 @@ export class Post {
     title: Title,
     price: Price,
     userId: UserId,
-    createAt: Date,
+    createdAt: Date,
     updatedAt: Date,
     likes: Like[] = [],
     comments: Comment[] = []
@@ -30,7 +30,7 @@ export class Post {
     this.title = title;
     this.price = price;
     this.userId = userId;
-    this.createAt = createAt;
+    this.createdAt = createdAt;
     this.updatedAt = updatedAt;
     this.likes = likes;
     this.comments = comments;
@@ -42,7 +42,7 @@ export class Post {
     title: string,
     price: number,
     userId: string,
-    createAt: Date,
+    createdAt: Date,
     updatedAt: Date,
     likes: Like[] = [],
     comments: Comment[] = []
@@ -52,7 +52,7 @@ export class Post {
       new Title(title),
       new Price(price),
       new UserId(userId),
-      createAt,
+      createdAt,
       updatedAt,
       likes,
       comments
@@ -76,8 +76,8 @@ export class Post {
     return this.userId;
   }
 
-  public getCreateAt(): Date {
-    return this.createAt;
+  public getcreatedAt(): Date {
+    return this.createdAt;
   }
 
   public getUpdatedAt(): Date {

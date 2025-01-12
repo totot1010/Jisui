@@ -18,7 +18,7 @@ export class PostRepository implements IPostRepository {
 
   async create(post: Post): Promise<Post> {
     const client = this.getClient();
-    const { id, title, price, userId, createAt, updatedAt } = await client.post.create({
+    const { id, title, price, userId, createdAt, updatedAt } = await client.post.create({
       data: {
         id: post.getPostId().value,
         title: post.getTitle().value,
@@ -27,7 +27,7 @@ export class PostRepository implements IPostRepository {
       }
     });
 
-    return Post.reConstruct(id, title, price, userId, createAt, updatedAt, []);
+    return Post.reConstruct(id, title, price, userId, createdAt, updatedAt, []);
   }
 
   async findAll(): Promise<Post[]> {
@@ -45,17 +45,19 @@ export class PostRepository implements IPostRepository {
             id: true,
             postId: true,
             userId: true,
-            content: true
+            content: true,
+            createdAt: true,
+            updatedAt: true,
           }
         }
       },
-      orderBy: { createAt: 'desc' }
+      orderBy: { createdAt: 'desc' }
     });
 
     return posts.map(post => {
       const likes = post.likes.map(like => new Like(new UserId(like.userId), new PostId(like.postId)));
-      const comments = post.comments.map(comment => Comment.reConstruct(comment.id, comment.postId, comment.userId, comment.content));
-      return Post.reConstruct(post.id, post.title, post.price, post.userId, post.createAt, post.updatedAt, likes, comments);
+      const comments = post.comments.map(comment => Comment.reConstruct(comment.id, comment.postId, comment.userId, comment.content, comment.createdAt, comment.updatedAt));
+      return Post.reConstruct(post.id, post.title, post.price, post.userId, post.createdAt, post.updatedAt, likes, comments);
     });
   }
 
@@ -66,7 +68,7 @@ export class PostRepository implements IPostRepository {
     return await client.post.count({
       where: {
         userId: userId.value,
-        createAt: {
+        createdAt: {
           gte: startDate
         }
       },
@@ -115,6 +117,8 @@ export class PostRepository implements IPostRepository {
         postId: comment.getPostId().value,
         userId: comment.getUserId().value,
         content: comment.getContent().value,
+        createdAt: comment.getCreatedAt(),
+        updatedAt: comment.getUpdatedAt(),
       }
     });
   }

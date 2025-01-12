@@ -15,6 +15,8 @@ export class CreateCommentService {
       new PostId(postId),
       new UserId(userId),
       new CommentContent(content),
+      new Date(),
+      undefined,
     );
     await this.postRepository.createComment(comment);
   }

@@ -54,17 +54,17 @@ describe('PostRepository', async () => {
       const title = new Title('title');
       const price = new Price(1000);
       const userId = user.getUserId();
-      const createAt = new Date();
+      const createdAt = new Date();
       const updatedAt = new Date();
-      const post = new Post(postId, title, price, userId, createAt, updatedAt, []);
+      const post = new Post(postId, title, price, userId, createdAt, updatedAt, []);
 
       const postId2 = PostId.generate();
       const title2 = new Title('title2');
       const price2 = new Price(2000);
       const userId2 = user2.getUserId();
-      const createAt2 = new Date();
+      const createdAt2 = new Date();
       const updatedAt2 = new Date();
-      const post2 = new Post(postId2, title2, price2, userId2, createAt2, updatedAt2, []);
+      const post2 = new Post(postId2, title2, price2, userId2, createdAt2, updatedAt2, []);
 
       await postRepository.create(post);
       await postRepository.create(post2);
@@ -133,9 +133,9 @@ describe('PostRepository', async () => {
       const title = new Title('title');
       const price = new Price(1000);
       const userId = user.getUserId();
-      const createAt = new Date();
+      const createdAt = new Date();
       const updatedAt = new Date();
-      const post = new Post(postId, title, price, userId, createAt, updatedAt, []);
+      const post = new Post(postId, title, price, userId, createdAt, updatedAt, []);
 
       await postRepository.create(post);
       const like = new Like(userId, postId);
@@ -156,9 +156,9 @@ describe('PostRepository', async () => {
       const title = new Title('title');
       const price = new Price(1000);
       const userId = user.getUserId();
-      const createAt = new Date();
+      const createdAt = new Date();
       const updatedAt = new Date();
-      const post = new Post(postId, title, price, userId, createAt, updatedAt, []);
+      const post = new Post(postId, title, price, userId, createdAt, updatedAt, []);
 
       await postRepository.create(post);
       const like = new Like(userId, postId);
@@ -181,17 +181,17 @@ describe('PostRepository', async () => {
       const title = new Title('title');
       const price = new Price(1000);
       const userId = user.getUserId();
-      const createAt = new Date();
+      const createdAt = new Date();
       const updatedAt = new Date();
-      const post = new Post(postId, title, price, userId, createAt, updatedAt, []);
+      const post = new Post(postId, title, price, userId, createdAt, updatedAt, []);
 
       const postId2 = PostId.generate();
       const title2 = new Title('title2');
       const price2 = new Price(2000);
       const userId2 = user2.getUserId();
-      const createAt2 = new Date();
+      const createdAt2 = new Date();
       const updatedAt2 = new Date();
-      const post2 = new Post(postId2, title2, price2, userId2, createAt2, updatedAt2, []);
+      const post2 = new Post(postId2, title2, price2, userId2, createdAt2, updatedAt2, []);
 
       await postRepository.create(post);
       await postRepository.create(post2);
@@ -219,17 +219,17 @@ describe('PostRepository', async () => {
         const title = new Title('title');
         const price = new Price(1000);
         const userId = user.getUserId();
-        const createAt = new Date();
+        const createdAt = new Date();
         const updatedAt = new Date();
-        const post = new Post(postId, title, price, userId, createAt, updatedAt, []);
+        const post = new Post(postId, title, price, userId, createdAt, updatedAt, []);
 
         const postId2 = PostId.generate();
         const title2 = new Title('title2');
         const price2 = new Price(2000);
         const userId2 = user2.getUserId();
-        const createAt2 = new Date();
+        const createdAt2 = new Date();
         const updatedAt2 = new Date();
-        const post2 = new Post(postId2, title2, price2, userId2, createAt2, updatedAt2, []);
+        const post2 = new Post(postId2, title2, price2, userId2, createdAt2, updatedAt2, []);
 
         await postRepository.create(post);
         await postRepository.create(post2);
@@ -262,15 +262,15 @@ describe('PostRepository', async () => {
       const title = new Title('title');
       const price = new Price(1000);
       const userId = user.getUserId();
-      const createAt = new Date();
+      const createdAt = new Date();
       const updatedAt = new Date();
-      const post = new Post(postId, title, price, userId, createAt, updatedAt, []);
+      const post = new Post(postId, title, price, userId, createdAt, updatedAt, []);
 
       await postRepository.create(post);
 
       const commentId = CommentId.generate();
       const content = new CommentContent('content');
-      const comment = new Comment(commentId, postId, userId, content);
+      const comment = new Comment(commentId, postId, userId, content, new Date(), undefined);
 
       // when
       await postRepository.createComment(comment);
@@ -281,6 +281,8 @@ describe('PostRepository', async () => {
       expect(result[0].getComments()).toHaveLength(1);
       expect(result[0].getComments()[0].getCommentId().value).toBe(commentId.value);
       expect(result[0].getComments()[0].getContent().value).toBe(content.value);
+      expect(result[0].getComments()[0].getCreatedAt()).toBeInstanceOf(Date);
+      expect(result[0].getComments()[0].getUpdatedAt()).toBeUndefined();
     }));
   });
 });
