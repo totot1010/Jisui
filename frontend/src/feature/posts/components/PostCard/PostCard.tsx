@@ -1,19 +1,18 @@
 import Link from "next/link";
 import { Post } from "../../types";
 import { JapaneseYen } from "lucide-react";
+import { Like } from "../Like";
 
 export type PostCardProps = {
   post: Post;
+  loginUserId: string;
 }
 
-export const PostCard = ({ post }: PostCardProps) => {
+export const PostCard = ({ post, loginUserId }: PostCardProps) => {
   return (
     <div className="bg-white rounded-xl shadow-lg overflow-hidden transition-shadow duration-300 hover:shadow-xl">
       <div className="p-6">
         <div className="flex items-center mb-4">
-          <div className="w-12 h-12 bg-primary-200 rounded-full mr-4 flex items-center justify-center text-primary-600 font-bold text-xl">
-            {post.username[0]}
-          </div>
           <div>
             <Link href={`/profile/${post.userId}`}>
               <span className="font-semibold text-lg block">{post.username}</span>
@@ -32,13 +31,9 @@ export const PostCard = ({ post }: PostCardProps) => {
           </p>
         </div>
         <div className="flex items-center mb-4 space-x-4">
-          {/* TODO: implement like and comment */}
-          {/* <button onClick={() => handleLike(post.postId)} className="flex items-center text-red-500 hover:text-red-600 transition-colors duration-200">
-                <Heart size={20} className="mr-1" />
-                <span>{post.likes}</span>
-              </button>
-
-              <button className="flex items-center text-primary-500 hover:text-primary-600 transition-colors duration-200">
+          {/* TODO: implement comment */}
+          <Like post={post} loginUserId={loginUserId}/>
+              {/* <button className="flex items-center text-primary-500 hover:text-primary-600 transition-colors duration-200">
                 <MessageCircle size={20} className="mr-1" />
                 <span>{post.comments.length}</span>
               </button> */}
