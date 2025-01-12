@@ -8,7 +8,7 @@ import { CreateCommentRequestDto } from "../dto/createComment.dto";
 export class CreateCommentService {
   constructor(private postRepository: IPostRepository) { }
 
-  async execute(createCommentRequestDto: CreateCommentRequestDto): Promise<Comment> {
+  async execute(createCommentRequestDto: CreateCommentRequestDto): Promise<void> {
     const { postId, userId, content } = createCommentRequestDto;
     const comment = new Comment(
       CommentId.generate(),
@@ -17,7 +17,5 @@ export class CreateCommentService {
       new CommentContent(content),
     );
     await this.postRepository.createComment(comment);
-
-    return comment;
   }
 }
