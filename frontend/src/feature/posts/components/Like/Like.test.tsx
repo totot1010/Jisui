@@ -3,7 +3,7 @@ import { describe, it, expect, vi } from 'vitest';
 import { Post } from '../../types';
 import { Like } from './Like';
 import * as toggleLikeModule from '@/feature/posts/actions/toggleLike';
-import * as revalidateGetAllPostListModule from '@/feature/posts/actions/revalidateGetAllPostList';
+import { toast } from '@/hooks/use-toast';
 
 const post: Post = {
   postId: '1',
@@ -17,14 +17,11 @@ const post: Post = {
 }
 const loginUserId = 'id1';
 
-vi.mock('next/headers', () => ({
-  cookies: vi.fn().mockResolvedValue({
-  get: vi.fn().mockReturnValue({ value: '1' }),
-  }),
-}));
-
 const LikeSpy = vi.spyOn(toggleLikeModule, 'toggleLike').mockResolvedValue();
-const revalidateGetAllPostListSpy = vi.spyOn(revalidateGetAllPostListModule, 'revalidateGetAllPostList').mockResolvedValue();
+
+vi.mock('@/hooks/use-toast', () => ({
+  toast: vi.fn().mockResolvedValue(undefined),
+}));
 
 describe('Like', () => {
 
@@ -63,20 +60,21 @@ describe('Like', () => {
     fireEvent.click(button);
   
     expect(LikeSpy).toHaveBeenCalled();
+    expect(LikeSpy).toHaveBeenCalledWith({postId: post.postId, userId: loginUserId});
   });
 
-  it('いいねするとrevalidateGetAllPostListが呼ばれること', () => {
+  it('いいねに失敗した場合、toast関数が呼ばれること', async () => {
+    LikeSpy.mockRejectedValue(new Error('error'));
+
     render(<Like post={post} loginUserId={loginUserId}/>)
 
     const button = screen.getByRole('button');
     fireEvent.click(button);
-  
-    waitFor(() => {
-      expect(revalidateGetAllPostListSpy).toHaveBeenCalled();
-    }) 
+
+    await waitFor(() => {
+      expect(toast).toHaveBeenCalled();
+      expect(toast).toHaveBeenCalledWith({ variant: 'destructive', title: '予期せぬエラーが発生しました。', description: 'いいねに失敗しました。' });
+    });
   });
+
 });
-
-
-
-

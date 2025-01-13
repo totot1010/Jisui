@@ -2,6 +2,7 @@ import { ApiClient, isApiError } from "@/api/api";
 import { Post } from "../../types";
 import { PostCard } from "../PostCard";
 import { cookies } from "next/headers";
+import { RevalidateTag } from "@/constants/revalidateTag";
 
 export const AllPostList = async () => {
   const cookieStore = await cookies();
@@ -12,7 +13,7 @@ export const AllPostList = async () => {
     throw new Error('userIdが取得できませんでした');
   }
   
-  const response = await ApiClient().Get<undefined, Post[]>('posts', undefined, true, { next: { tags: ['GetAllPostList'] } });
+  const response = await ApiClient().Get<undefined, Post[]>('posts', undefined, true, { next: { tags: [RevalidateTag.GetAllPostList] } });
   if (isApiError(response)) {
     return <div>{response.message}</div>;
   }
