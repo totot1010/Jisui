@@ -2,27 +2,43 @@
 
 import { useState } from "react";
 import { Post } from "../../types";
+import { createComment } from "../../actions/createComment";
+import { isApiError } from "@/api/types";
+import { toast } from "@/hooks/use-toast";
 
 type Props = {
-  loginUserId: string
   post: Post
 }
 
-export const CreateCommentForm = ({ loginUserId, post }: Props) => {
+export const CreateCommentForm = ({ post }: Props) => {
   const [comment, setComment] = useState('')
 
-  const handleComment = (postId: string, comment: string) => {
-    console.log(postId, comment)
+  const handleComment = async (comment: string) => {
+    const trimmedComment = comment.trim()
+    // 空白の場合はコメントを投稿しない
+    if (!trimmedComment) {
+      return
+    }
+
+    // コメントを投稿
+    const response = await createComment({ postId: post.postId, content: trimmedComment })
+    if (response && isApiError(response)) {
+      toast({
+        variant: "destructive",
+        title: "予期せぬエラーが発生しました。",
+        description: "コメントの投稿に失敗しました。",
+      })
+      return
+    }
+
+    setComment('')
   }
 
   return (
     <form
       onSubmit={(e) => {
         e.preventDefault()
-        if (comment.trim()) {
-          handleComment(post.postId, comment.trim())
-          setComment('')
-        }
+        handleComment(comment)
       }}
       className="flex">
       <input
