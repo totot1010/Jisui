@@ -14,10 +14,11 @@ const post: Post = {
   createdAt: new Date(),
   updatedAt: new Date(),
   likes: ["id1", "id2"],
+  comments: [],
 }
 const loginUserId = 'id1';
 
-const LikeSpy = vi.spyOn(toggleLikeModule, 'toggleLike').mockResolvedValue();
+const LikeSpy = vi.spyOn(toggleLikeModule, 'toggleLike').mockResolvedValue(undefined);
 
 vi.mock('@/hooks/use-toast', () => ({
   toast: vi.fn().mockResolvedValue(undefined),
@@ -33,22 +34,22 @@ describe('Like', () => {
 
   it('いいねの数が表示されていること', () => {
     render(<Like post={post} loginUserId={loginUserId}/>)
-  
+
     const likeCountElement = screen.getByText(post.likes.length.toString());
     expect(likeCountElement).toBeInTheDocument();
   });
 
   it('ログインユーザーがいいねしている場合、いいねアイコンの中が塗られること', () => {
     render(<Like post={post} loginUserId={loginUserId}/>)
-  
+
     const heartIcon = screen.getByRole('button').querySelector('svg');
     expect(heartIcon).toHaveClass('fill-red-500');
   });
-  
+
   it('ログインユーザーがいいねしていない場合、いいねアイロンの中が塗られないこと', () => {
     const newPost = { ...post, likes: ["id2"] };
     render(<Like post={newPost} loginUserId={loginUserId}/>)
-  
+
     const heartIcon = screen.getByRole('button').querySelector('svg');
     expect(heartIcon).not.toHaveClass('fill-red-500');
   });
@@ -58,7 +59,7 @@ describe('Like', () => {
 
     const button = screen.getByRole('button');
     fireEvent.click(button);
-  
+
     expect(LikeSpy).toHaveBeenCalled();
     expect(LikeSpy).toHaveBeenCalledWith({postId: post.postId, userId: loginUserId});
   });

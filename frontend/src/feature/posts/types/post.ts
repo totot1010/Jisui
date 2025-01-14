@@ -1,5 +1,15 @@
 import { User } from "@/feature/auth/types"
 
+export type PostComment = {
+  id: string
+  postId: string
+  userId: string
+  username: string
+  content: string
+  createdAt: string
+  updatedAt: string
+}
+
 export type Post = {
   postId: string
   title: string
@@ -9,5 +19,5 @@ export type Post = {
   createdAt: Date
   updatedAt: Date
   likes: string[]
-  // comments: Comment[]
+  comments: PostComment[]
 }
