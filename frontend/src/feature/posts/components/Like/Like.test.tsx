@@ -18,7 +18,7 @@ const post: Post = {
 }
 const loginUserId = 'id1';
 
-const LikeSpy = vi.spyOn(toggleLikeModule, 'toggleLike').mockResolvedValue(undefined);
+const LikeSpy = vi.spyOn(toggleLikeModule, 'toggleLike').mockResolvedValue({ data: { message: "" }, type: "success" });
 
 vi.mock('@/hooks/use-toast', () => ({
   toast: vi.fn().mockResolvedValue(undefined),
@@ -65,7 +65,7 @@ describe('Like', () => {
   });
 
   it('いいねに失敗した場合、toast関数が呼ばれること', async () => {
-    LikeSpy.mockRejectedValue(new Error('error'));
+    LikeSpy.mockResolvedValue({ type: "error", status: "500" });
 
     render(<Like post={post} loginUserId={loginUserId}/>)
 
