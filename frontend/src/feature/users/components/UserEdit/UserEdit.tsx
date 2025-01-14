@@ -1,4 +1,5 @@
-import { ApiClient, isApiError } from '@/api/api'
+import { ApiClient } from '@/api/api'
+import { isApiError } from '@/api/types'
 import { UserEditForm } from '../UserEditForm/UserEditForm'
 import { GetUserResponseDto } from '../../types'
 

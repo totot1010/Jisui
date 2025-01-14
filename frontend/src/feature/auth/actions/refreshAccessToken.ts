@@ -1,7 +1,7 @@
 'use server'
 
-import { ApiClient, ApiResponse } from "@/api/api";
-
+import { ApiClient } from "@/api/api";
+import { ApiResponse } from "@/api/types";
 type refreshAccessTokenRequest = {
   refreshToken: string;
 }

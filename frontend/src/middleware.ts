@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 import { decodeJwtTokenExp } from './lib/auth'
 import { refreshAccessToken } from './feature/auth/actions/refreshAccessToken'
-import { isApiError } from './api/api'
+import { isApiError } from './api/types'
 
 export async function middleware(request: NextRequest) {
   // ログインとサインアップページへのアクセスは常に許可

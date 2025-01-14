@@ -1,6 +1,7 @@
 'use server';
 
-import { ApiClient, ApiResponse, isApiError } from "@/api/api";
+import { ApiClient } from "@/api/api";
+import { ApiResponse, isApiError } from "@/api/types";
 import { toggleLikeRequestDto } from "../types/dtos/toggleLikeRequestDto";
 import { revalidateTag } from "next/cache";
 import { RevalidateTag } from "@/constants/revalidateTag";

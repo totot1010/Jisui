@@ -2,8 +2,9 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
-import { ApiClient, ApiError, isApiError } from "@/api/api";
+import { ApiClient } from "@/api/api";
 import { LoginRequestDto, LoginResponseDto } from "../types/dtos";
+import { ApiError, isApiError } from "@/api/types";
 
 export const login = async (request: LoginRequestDto): Promise<ApiError | void> => {
   const response = await ApiClient().Post<LoginRequestDto, LoginResponseDto>('auth/login', request, false);

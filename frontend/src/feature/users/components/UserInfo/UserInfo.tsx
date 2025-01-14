@@ -1,4 +1,5 @@
-import { ApiClient, isApiError } from "@/api/api";
+import { ApiClient } from "@/api/api";
+import { isApiError } from "@/api/types";
 import { GetUserResponseDto } from "../../types";
 import { Edit } from "lucide-react";
 import Link from "next/link";

@@ -5,7 +5,7 @@ import { useState } from "react"
 import SignUpView from "./view/Signup"
 import { CreateUserRequestDto } from "../../types/dtos";
 import { createUser } from "../../actions/createUser";
-import { isApiError } from "@/api/api";
+import { isApiError } from "@/api/types";
 
 export default function Signup() {
   const [username, setUsername] = useState("")
@@ -27,7 +27,7 @@ export default function Signup() {
 
       const response = await createUser(data);
       if(isApiError(response)) {
-        setError(response.message)
+        setError(response.message ?? "予期せぬエラーが発生しました。")
         return;
       }
       router.push("/login")
