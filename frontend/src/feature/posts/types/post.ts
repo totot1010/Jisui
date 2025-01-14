@@ -8,6 +8,6 @@ export type Post = {
   username: User['username']
   createdAt: Date
   updatedAt: Date
-  // likes: number
+  likes: string[]
   // comments: Comment[]
 }

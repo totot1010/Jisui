@@ -22,13 +22,14 @@ export const ApiClient = () => {
 		path: string,
 		params?: RequestType,
 		auth: boolean = true,
+		nextOptions: { next: { tags: string[] } } | undefined = undefined,
 	): Promise<ApiResponse<ResponseType>> => {
 		// paramsをクエリパラメータに変換
 		const queryString = params ? requestToUrlSearch(params).toString() : "";
 		// クエリパラメータがあればURLに追加
 		const requestUrl = queryString ? `${path}?${queryString}` : path;
 
-		return request(requestUrl, "GET", undefined, auth);
+		return request(requestUrl, "GET", undefined, auth, nextOptions);
 	};
 	const Post = <RequestType = undefined, ResponseType = unknown>(
 		path: string,
@@ -39,12 +40,12 @@ export const ApiClient = () => {
 		path: string,
 		params?: RequestType,
 		auth: boolean = true,
-	): Promise<ApiResponse<ResponseType>> => request(path, "PUT", params,auth);
+	): Promise<ApiResponse<ResponseType>> => request(path, "PUT", params, auth);
 	const Delete = <RequestType = undefined, ResponseType = unknown>(
 		path: string,
 		params?: RequestType,
 		auth: boolean = true,
-	): Promise<ApiResponse<ResponseType>> => request(path, "DELETE", params,auth);
+	): Promise<ApiResponse<ResponseType>> => request(path, "DELETE", params, auth);
 
 	return {
 		Get,
@@ -75,6 +76,7 @@ const request = async <RequestType = undefined, ResponseType = unknown>(
 	method: string,
 	params?: RequestType,
 	auth: boolean = true,
+	nextOptions: { next: { tags: string[] } } | undefined = undefined,
 ): Promise<ApiResponse<ResponseType>> => {
 	const cookieStore = await cookies();
 	const accessToken = cookieStore.get("accessToken")?.value;
@@ -105,6 +107,9 @@ const request = async <RequestType = undefined, ResponseType = unknown>(
 		options.body = JSON.stringify(params);
 	}
 
+	if (method === "GET" && nextOptions) {
+		options.next = nextOptions.next;
+	}
 	const response = await fetch(url, options);
 	return handleResponse<ResponseType>(response);
 };

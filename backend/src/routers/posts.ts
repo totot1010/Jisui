@@ -50,6 +50,8 @@ post.post("/likes", async (c) => {
   const postLikeService = new PostLikeService(postRepository)
   await postLikeService.toggleLike(likePostRequestDto);
   return c.json({ message: "" }, HttpStatus.OK);
+}).onError((error: any, c) => {
+  return c.json({ message: "いいねに失敗しました。" }, HttpStatus.INTERNAL_SERVER_ERROR);
 });
 
 post.post("/:id/comments", async (c) => {
