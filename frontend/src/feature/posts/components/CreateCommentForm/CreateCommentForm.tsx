@@ -8,10 +8,10 @@ import { toast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
 
 type Props = {
-  post: Post
+  postId: string
 }
 
-export const CreateCommentForm = ({ post }: Props) => {
+export const CreateCommentForm = ({ postId }: Props) => {
   const [comment, setComment] = useState('')
   const [isLoading, setIsLoading] = useState(false)
 
@@ -30,7 +30,7 @@ export const CreateCommentForm = ({ post }: Props) => {
     setIsLoading(true)
     try {
       // コメントを投稿
-      const response = await createComment({ postId: post.postId, content: trimmedComment })
+      const response = await createComment({ postId: postId, content: trimmedComment })
       if (response && isApiError(response)) {
         toast({
           variant: "destructive",

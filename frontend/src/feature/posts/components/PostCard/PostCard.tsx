@@ -44,7 +44,7 @@ export const PostCard = ({ post, loginUserId }: PostCardProps) => {
             <Comment key={comment.id} comment={comment} />
           ))}
         </div>
-        <CreateCommentForm loginUserId={loginUserId} post={post} />
+        <CreateCommentForm postId={post.postId} />
       </div>
     </div>
   )

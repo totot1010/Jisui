@@ -6,18 +6,6 @@ import * as createCommentModule from '@/feature/posts/actions/createComment';
 import { toast } from '@/hooks/use-toast';
 import { act } from 'react';
 
-const post: Post = {
-  postId: '1',
-  title: 'title',
-  price: 1000,
-  userId: 'id1',
-  username: 'username',
-  createdAt: new Date(),
-  updatedAt: new Date(),
-  likes: [],
-  comments: [],
-};
-
 const createCommentSpy = vi.spyOn(createCommentModule, 'createComment').mockResolvedValue(undefined);
 
 vi.mock('@/hooks/use-toast', () => ({
@@ -25,15 +13,16 @@ vi.mock('@/hooks/use-toast', () => ({
 }));
 
 describe('CreateCommentForm', () => {
+  const postId = "postId"
   it('コメントフォームが表示されること', () => {
-    render(<CreateCommentForm post={post} />);
+    render(<CreateCommentForm postId={postId} />);
 
     expect(screen.getByPlaceholderText('コメントを追加...')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: '投稿' })).toBeInTheDocument();
   });
 
   it('コメントを入力できること', () => {
-    render(<CreateCommentForm post={post} />);
+    render(<CreateCommentForm postId={postId} />);
 
     const input = screen.getByPlaceholderText('コメントを追加...') as HTMLInputElement;
     act(() => {
@@ -44,7 +33,7 @@ describe('CreateCommentForm', () => {
   });
 
   it('空のコメントは送信されないこと', async () => {
-    render(<CreateCommentForm post={post} />);
+    render(<CreateCommentForm postId={postId} />);
 
     const button = screen.getByRole('button', { name: '投稿' });
     act(() => {
@@ -55,7 +44,7 @@ describe('CreateCommentForm', () => {
   });
 
   it('コメントが正常に送信されること', async () => {
-    render(<CreateCommentForm post={post} />);
+    render(<CreateCommentForm postId={postId} />);
 
     const input = screen.getByPlaceholderText('コメントを追加...');
     const button = screen.getByRole('button', { name: '投稿' });
@@ -66,7 +55,7 @@ describe('CreateCommentForm', () => {
 
     await waitFor(() => {
       expect(createCommentSpy).toHaveBeenCalledWith({
-        postId: post.postId,
+        postId: postId,
         content: 'テストコメント'
       });
     })
@@ -75,7 +64,7 @@ describe('CreateCommentForm', () => {
   it('コメント送信中はフォームが無効化されること', async () => {
     createCommentSpy.mockImplementationOnce(() => new Promise(resolve => setTimeout(resolve, 100)));
 
-    render(<CreateCommentForm post={post} />);
+    render(<CreateCommentForm postId={postId} />);
 
     const input = screen.getByPlaceholderText('コメントを追加...') as HTMLInputElement;
     const button = screen.getByRole('button', { name: '投稿' });
@@ -97,7 +86,7 @@ describe('CreateCommentForm', () => {
       message: 'コメントの投稿に失敗しました。',
     });
 
-    render(<CreateCommentForm post={post} />);
+    render(<CreateCommentForm postId={postId} />);
 
     const input = screen.getByPlaceholderText('コメントを追加...');
     const button = screen.getByRole('button', { name: '投稿' });
