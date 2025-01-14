@@ -6,6 +6,7 @@ import { Button } from "@/components/shadcn/button";
 import { toggleLike } from "../../actions/toggleLike";
 import { Post } from "../../types";
 import { toast } from "@/hooks/use-toast";
+import { HttpStatus } from "@/constants/statusCode";
 
 type LikeProps = {
     post: Post
@@ -20,9 +21,11 @@ export const Like = ({post, loginUserId}: LikeProps) => {
     if (isLoading) return;
     setIsLoading(true);
 
-    try {
-      await toggleLike({ postId, userId });
-    } catch (error) {
+    const response = await toggleLike({ postId, userId });
+    if (
+      response["type"] == "error" &&
+      Number(response["status"]) === HttpStatus.INTERNAL_SERVER_ERROR
+    ) {
       toast(
         {
           variant: "destructive",
@@ -30,9 +33,8 @@ export const Like = ({post, loginUserId}: LikeProps) => {
           description: "いいねに失敗しました。",
         }
       );
-    } finally {
-      setIsLoading(false);
-    }
+    } 
+    setIsLoading(false);
   };
 
   return (
