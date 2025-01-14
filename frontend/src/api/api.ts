@@ -1,21 +1,5 @@
 import { cookies } from "next/headers";
-
-export type ApiError = {
-	type: "error";
-	status: string;
-	title?: string;
-	message?: string;
-};
-
-export type ApiResponse<ResponseType> =
-	| { type: "success"; data: ResponseType }
-	| ApiError;
-
-export const isApiError = (
-	response: ApiResponse<unknown>,
-): response is ApiError => {
-	return response.type === "error";
-};
+import { ApiResponse } from "./types";
 
 export const ApiClient = () => {
 	const Get = async <RequestType = undefined, ResponseType = unknown>(

@@ -1,4 +1,5 @@
-import { ApiClient, isApiError } from "@/api/api";
+import { ApiClient } from "@/api/api";
+import { isApiError } from "@/api/types";
 import { Post } from "../../types";
 import { PostCard } from "../PostCard";
 import { cookies } from "next/headers";
@@ -12,7 +13,7 @@ export const AllPostList = async () => {
     // 基本的にはエラーは発生しないが、型エラーを回避するためにthrowしている
     throw new Error('userIdが取得できませんでした');
   }
-  
+
   const response = await ApiClient().Get<undefined, Post[]>('posts', undefined, true, { next: { tags: [RevalidateTag.GetAllPostList] } });
   if (isApiError(response)) {
     return <div>{response.message}</div>;

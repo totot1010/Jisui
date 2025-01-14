@@ -1,7 +1,9 @@
 import Link from "next/link";
 import { Post } from "../../types";
-import { JapaneseYen } from "lucide-react";
+import { JapaneseYen, MessageCircle } from "lucide-react";
 import { Like } from "../Like";
+import { Comment } from "../Comment";
+import { CreateCommentForm } from "../CreateCommentForm/CreateCommentForm";
 
 export type PostCardProps = {
   post: Post;
@@ -31,42 +33,18 @@ export const PostCard = ({ post, loginUserId }: PostCardProps) => {
           </p>
         </div>
         <div className="flex items-center mb-4 space-x-4">
-          {/* TODO: implement comment */}
-          <Like post={post} loginUserId={loginUserId}/>
-              {/* <button className="flex items-center text-primary-500 hover:text-primary-600 transition-colors duration-200">
-                <MessageCircle size={20} className="mr-1" />
-                <span>{post.comments.length}</span>
-              </button> */}
+          <Like post={post} loginUserId={loginUserId} />
+          <button className="flex items-center text-primary-500 hover:text-primary-600 transition-colors duration-200">
+            <MessageCircle size={20} className="mr-1" />
+            <span>{post.comments.length}</span>
+          </button>
         </div>
-        {/* TODO: add comments */}
-        {/* <div className="mb-4 space-y-2">
-              {post.comments.map(comment => (
-                <div key={comment.id} className="bg-secondary-100 rounded-lg p-3">
-                  <span className="font-semibold mr-2 text-primary-600">{comment.username}</span>
-                  <span className="text-secondary-700">{comment.text}</span>
-                </div>
-              ))}
-            </div> */}
-
-        {/* TODO: add comment form */}
-        {/* <form onSubmit={(e) => {
-              e.preventDefault()
-              const input = e.currentTarget.elements.namedItem('comment') as HTMLInputElement
-              if (input.value.trim()) {
-                handleComment(post.postId, input.value.trim())
-                input.value = ''
-              }
-            }} className="flex">
-              <input
-                type="text"
-                name="comment"
-                placeholder="コメントを追加..."
-                className="flex-grow border border-secondary-300 rounded-l-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
-              />
-              <button type="submit" className="bg-black text-white px-6 py-2 rounded-r-lg hover:bg-gray-800 transition-colors duration-200">
-                投稿
-              </button>
-            </form> */}
+        <div className="mb-4 space-y-2">
+          {post.comments.map(comment => (
+            <Comment key={comment.id} comment={comment} />
+          ))}
+        </div>
+        <CreateCommentForm postId={post.postId} />
       </div>
     </div>
   )

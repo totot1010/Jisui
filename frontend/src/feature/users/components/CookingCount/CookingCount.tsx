@@ -1,4 +1,5 @@
-import { ApiClient, isApiError } from "@/api/api";
+import { ApiClient } from "@/api/api";
+import { isApiError } from "@/api/types";
 
 type CookingCountProps = {
   targetPeriod: 'day' | 'week';

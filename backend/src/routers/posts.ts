@@ -54,12 +54,11 @@ post.post("/likes", async (c) => {
   return c.json({ message: "いいねに失敗しました。" }, HttpStatus.INTERNAL_SERVER_ERROR);
 });
 
-post.post("/:id/comments", async (c) => {
+post.post("/comments", async (c) => {
   // ユーザーのコメントを作成する
-  const postId = c.req.param('id');
   const userId = c.get('userId');
   const body = await c.req.json();
-  const { content } = body;
+  const { postId, content } = body;
 
   if (!postId || !userId) {
     return c.json({ message: "postId, userId is required" }, HttpStatus.BAD_REQUEST);

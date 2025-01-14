@@ -12,6 +12,7 @@ const post: Post = {
   createdAt: new Date(),
   updatedAt: new Date(),
   likes: ["id"],
+  comments: [],
 }
 const loginUserId = 'userId';
 
@@ -40,9 +41,8 @@ describe('PostCard', () => {
 
   it('投稿者詳細リンクが表示されること', () => {
   render(<PostCard post={post} loginUserId={loginUserId}/>)
-  
+
   const profileLink = screen.getByRole('link', { name: post.username });
   expect(profileLink).toBeInTheDocument();
   });
 });
-

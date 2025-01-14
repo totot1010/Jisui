@@ -1,8 +1,9 @@
 'use server'
 
 import { redirect } from "next/navigation"
-import { ApiClient, ApiResponse, isApiError } from "@/api/api"
+import { ApiClient } from "@/api/api"
 import { UpdateUserRequestDto } from "../types/dtos/updateUserDto"
+import { isApiError } from "@/api/types";
 
 export const updateUser = async (userId: string, request: UpdateUserRequestDto) => {
   const username = request.username
