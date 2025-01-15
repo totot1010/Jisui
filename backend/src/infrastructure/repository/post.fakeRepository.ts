@@ -25,6 +25,12 @@ export class PostFakeRepository implements IPostRepository {
     return [post1, post2];
   }
 
+  async findAllByUserId(userId: UserId): Promise<Post[]> {
+    const post1 = Post.reConstruct('id1', 'title1', 100, 'userId1', new Date(), new Date(), []);
+    const post2 = Post.reConstruct('id2', 'title2', 200, 'userId1', new Date(), new Date(), []);
+    return [post1, post2];
+  }
+
   async countByUserIdAndType(userId: UserId, type: PostCountType): Promise<number> {
     return 10;
   }

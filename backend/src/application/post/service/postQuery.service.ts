@@ -10,6 +10,10 @@ export class PostQueryService {
     return await this.postRepository.findAll();
   }
 
+  async findAllByUserId(userId: string): Promise<Post[]> {
+    return await this.postRepository.findAllByUserId(new UserId(userId));
+  }
+
   async countByUserIdAndType(userId: string, type: PostCountType): Promise<number> {
     return await this.postRepository.countByUserIdAndType(new UserId(userId), type);
   }

@@ -13,6 +13,8 @@ import { CreateCommentService } from "../application/post/service/createComment.
 import { CreateCommentRequestDto } from "../application/post/dto/createComment.dto";
 import { ValidationError } from "../shared/exceptions/validationError";
 import { HTTPException } from "hono/http-exception";
+import { GetUserPostService } from "../application/query/service/getUserPost.service";
+import { GetUserPostRequestDto } from "../application/query/dto/getUserPost.dto";
 
 
 // c.getで取得するパラメータの型
@@ -77,14 +79,17 @@ post.get("/", async (c) => {
   return c.json(results, HttpStatus.OK);
 });
 
-post.get("/:id", (c) => {
-  const id = c.req.param('id')
-  return c.json({ message: `post with id ${id}` }, HttpStatus.OK);
-});
+// post.get("/:id", (c) => {
+//   const id = c.req.param('id')
+//   return c.json({ message: `post with id ${id}` }, HttpStatus.OK);
+// });
 
-post.get("/:userId", (c) => {
+post.get("/:userId", async (c) => {
   const userId = c.req.param('userId')
-  return c.json({ message: `post with userId ${userId}` }, HttpStatus.OK);
+  const getUserPostRequestDto = new GetUserPostRequestDto(userId);
+  const getUserPostService = new GetUserPostService(postQueryService, userQueryService);
+  const results = await getUserPostService.execute(getUserPostRequestDto);
+  return c.json(results, HttpStatus.OK);
 });
 
 post.get("/:userId/counts", async (c) => {
