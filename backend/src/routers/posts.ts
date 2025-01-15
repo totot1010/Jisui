@@ -51,10 +51,6 @@ post.post("/likes", async (c) => {
   await postLikeService.toggleLike(likePostRequestDto);
   return c.json({ message: "" }, HttpStatus.OK);
 })
-// .onError((error: any, c) => {
-//   console.log('error11', error);
-//   return c.json({ message: "いいねに失敗しました。" }, HttpStatus.INTERNAL_SERVER_ERROR);
-// });
 
 post.post("/comments", async (c) => {
   // ユーザーのコメントを作成する
