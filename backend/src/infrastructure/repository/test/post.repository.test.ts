@@ -92,6 +92,44 @@ describe('PostRepository', async () => {
     }));
   });
 
+  describe('findAllByUserId', () => {
+    it('ユーザーIDに紐づいた投稿を取得できること', transactionTest(async () => {
+      // given
+      await userRepository.create(user);
+      await userRepository.create(user2);
+
+      const postId = PostId.generate();
+      const title = new Title('title');
+      const price = new Price(1000);
+      const userId = user.getUserId();
+      const createdAt = new Date();
+      const updatedAt = new Date();
+      const post = new Post(postId, title, price, userId, createdAt, updatedAt, []);
+
+      const postId2 = PostId.generate();
+      const title2 = new Title('title2');
+      const price2 = new Price(2000);
+      const userId2 = user2.getUserId();
+      const createdAt2 = new Date();
+      const updatedAt2 = new Date();
+      const post2 = new Post(postId2, title2, price2, userId2, createdAt2, updatedAt2, []);
+
+      await postRepository.create(post);
+      await postRepository.create(post2);
+
+      // when
+      const results = await postRepository.findAllByUserId(userId);
+      const [result] = results;
+
+      // then
+      expect(results).toHaveLength(1);
+      expect(result.getPostId().value).toBe(postId.value);
+      expect(result.getTitle().value).toBe(title.value);
+      expect(result.getPrice().value).toBe(price.value);
+      expect(result.getUserId().value).toBe(userId.value);
+    }));
+  });
+
   describe('countByUserIdAndType', () => {
     beforeEach(() => {
       // 時間をモック化

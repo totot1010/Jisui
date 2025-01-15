@@ -61,6 +61,40 @@ export class PostRepository implements IPostRepository {
     });
   }
 
+  async findAllByUserId(userId: UserId): Promise<Post[]> {
+    const client = this.getClient();
+    return client.post.findMany({
+      where: {
+        userId: userId.value
+      },
+      include: {
+        likes: {
+          select: {
+            userId: true,
+            postId: true
+          }
+        },
+        comments: {
+          select: {
+            id: true,
+            postId: true,
+            userId: true,
+            content: true,
+            createdAt: true,
+            updatedAt: true,
+          }
+        }
+      },
+      orderBy: { createdAt: 'desc' }
+    }).then(posts => {
+      return posts.map(post => {
+        const likes = post.likes.map(like => new Like(new UserId(like.userId), new PostId(like.postId)));
+        const comments = post.comments.map(comment => Comment.reConstruct(comment.id, comment.postId, comment.userId, comment.content, comment.createdAt, comment.updatedAt));
+        return Post.reConstruct(post.id, post.title, post.price, post.userId, post.createdAt, post.updatedAt, likes, comments);
+      });
+    });
+  }
+
   async countByUserIdAndType(userId: UserId, type: PostCountType): Promise<number> {
     const client = this.getClient();
     const startDate = this.getStartDate(type);
