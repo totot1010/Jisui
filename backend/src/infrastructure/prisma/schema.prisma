@@ -19,7 +19,7 @@ model User {
   username  String        @db.VarChar(50)
   email     String        @unique
   password  String
-  createdAt  DateTime      @default(now())
+  createdAt DateTime      @default(now())
   updatedAt DateTime      @updatedAt
   posts     Post[]
   likes     PostLike[]
@@ -31,9 +31,9 @@ model Post {
   id        String        @id @default(cuid())
   title     String
   price     Int
-  createdAt  DateTime      @default(now())
+  createdAt DateTime      @default(now())
   updatedAt DateTime      @updatedAt
-  user      User          @relation(fields: [userId], references: [id])
+  user      User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
   likes     PostLike[]
   comments  PostComment[]
@@ -44,20 +44,20 @@ model Post {
 model PostImage {
   id        String   @id @default(cuid())
   url       String
-  createdAt  DateTime @default(now())
+  createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  post      Post     @relation(fields: [postId], references: [id])
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
   postId    String
 }
 
 // 投稿に対するいいね
 model PostLike {
   id        String   @id @default(cuid())
-  createdAt  DateTime @default(now())
+  createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  post      Post     @relation(fields: [postId], references: [id])
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
   postId    String
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
 
   // 1ユーザーが1つの投稿に対して1回しかいいねできないようにする
@@ -68,11 +68,11 @@ model PostLike {
 model PostComment {
   id        String   @id @default(cuid())
   content   String
-  createdAt  DateTime @default(now())
+  createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  post      Post     @relation(fields: [postId], references: [id])
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
   postId    String
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
 
   // コメントは自由
