@@ -44,8 +44,13 @@ const postQueryService = new PostQueryService(postRepository);
 const userQueryService = new UserQueryService(userRepository);
 
 post.post("/", async (c) => {
+  const userId = c.get('userId');
+  if (!userId) {
+    return c.json({ message: "userId is required" }, HttpStatus.BAD_REQUEST);
+  }
   const body = await c.req.json()
-  const { title, price, userId } = body;
+  const { title, price } = body;
+
   const createPostRequestDto = new CreatePostRequestDto(title, price, userId);
   const createPostService = new CreatePostService(postRepository);
 
