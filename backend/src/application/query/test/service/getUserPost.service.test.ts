@@ -18,7 +18,7 @@ describe('GetUserPostService', () => {
   const userQueryService = new UserQueryService(userFakeRepository);
   const getUserPostService = new GetUserPostService(postQueryService, userQueryService);
 
-  describe('execute', async () => {
+  describe('getAllPostByUser', async () => {
     it('ユーザーIDに紐づく全ての投稿が取得できること', async () => {
       // given
       postFakeRepository.findAllByUserId = vi.fn().mockResolvedValue([
@@ -32,7 +32,7 @@ describe('GetUserPostService', () => {
 
       // when
       const getUserPostRequestDto = new GetUserPostRequestDto('userId1');
-      const posts = await getUserPostService.execute(getUserPostRequestDto);
+      const posts = await getUserPostService.getAllPostByUser(getUserPostRequestDto);
       const [post1] = posts;
 
       // then
@@ -44,6 +44,28 @@ describe('GetUserPostService', () => {
       expect(post1.username).toBe('username1');
       expect(post1.likes).toEqual([]);
       expect(post1.comments).toEqual([]);
+    });
+  });
+
+  describe('getAllPost', async () => {
+    it('全ての投稿が取得できること', async () => {
+      // given
+      // fakeRepositoryのreturnをmock化する
+      postFakeRepository.findAll = vi.fn().mockResolvedValue([
+        new Post(new PostId('id1'), new Title('title1'), new Price(100), new UserId('userId1'), new Date(), new Date(), []),
+        new Post(new PostId('id2'), new Title('title2'), new Price(200), new UserId('userId2'), new Date(), new Date(), []),
+      ]);
+
+      userFakeRepository.findAll = vi.fn().mockResolvedValue([
+        new User(new UserId('userId1'), new Username('username1'), new Email('email1@email.com'), new HashedPassword('password1')),
+        new User(new UserId('userId2'), new Username('username2'), new Email('email2@email.com'), new HashedPassword('password2')),
+      ]);
+
+      // when
+      const posts = await getUserPostService.getAllPost();
+
+      // then
+      expect(posts).toHaveLength(2);
     });
   });
 });

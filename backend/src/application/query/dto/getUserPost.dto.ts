@@ -6,7 +6,6 @@ export class GetUserPostRequestDto {
   }
 }
 
-
 export type PostCommentDto = {
   readonly id: string
   readonly userId: string

@@ -3,7 +3,6 @@ import { UserRepository } from "../infrastructure/repository/user.repository";
 import { PostRepository } from "../infrastructure/repository/post.repository";
 import { PostQueryService } from "../application/post/service/postQuery.service";
 import { UserQueryService } from "../application/user/service/userQuery.service";
-import { GetAllPostWithUserService } from "../application/query/service/getAllPostWithUser.service";
 import { requiredAuth } from "./middleware";
 import { HttpStatus } from "../shared/constants/statusCode";
 import { LikePostRequestDto } from "../application/post/dto/likePost.dto";
@@ -74,8 +73,8 @@ post.post("/comments", async (c) => {
 
 // みんなの投稿
 post.get("/", async (c) => {
-  const getAllPostWithUserService = new GetAllPostWithUserService(postQueryService, userQueryService);
-  const results = await getAllPostWithUserService.execute();
+  const getUserPostService = new GetUserPostService(postQueryService, userQueryService);
+  const results = await getUserPostService.getAllPost();
   return c.json(results, HttpStatus.OK);
 });
 
@@ -88,7 +87,7 @@ post.get("/:userId", async (c) => {
   const userId = c.req.param('userId')
   const getUserPostRequestDto = new GetUserPostRequestDto(userId);
   const getUserPostService = new GetUserPostService(postQueryService, userQueryService);
-  const results = await getUserPostService.execute(getUserPostRequestDto);
+  const results = await getUserPostService.getAllPostByUser(getUserPostRequestDto);
   return c.json(results, HttpStatus.OK);
 });
 
