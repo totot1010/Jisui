@@ -9,14 +9,15 @@ import { UserId } from "../../domain/user/value_object";
 export class PostFakeRepository implements IPostRepository {
 
   async create(post: Post): Promise<Post> {
-    const id = 'id';
-    const title = 'title';
-    const price = 100;
-    const userId = 'userId';
-    const createdAt = new Date();
-    const updatedAt = new Date();
-
-    return Post.reConstruct(id, title, price, userId, createdAt, updatedAt, []);
+    return Post.reConstruct(
+      post.getPostId().value,
+      post.getTitle().value,
+      post.getPrice().value,
+      post.getUserId().value,
+      post.getCreatedAt(),
+      post.getUpdatedAt(),
+      []
+    );
   }
 
   async findAll(): Promise<Post[]> {

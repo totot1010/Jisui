@@ -1,7 +1,6 @@
 "use client"
 
 import { useState } from "react";
-import { Post } from "../../types";
 import { createComment } from "../../actions/createComment";
 import { isApiError } from "@/api/types";
 import { toast } from "@/hooks/use-toast";

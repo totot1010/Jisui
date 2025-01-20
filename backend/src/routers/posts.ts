@@ -14,6 +14,8 @@ import { ValidationError } from "../shared/exceptions/validationError";
 import { HTTPException } from "hono/http-exception";
 import { GetUserPostService } from "../application/query/service/getUserPost.service";
 import { GetUserPostRequestDto } from "../application/query/dto/getUserPost.dto";
+import { CreatePostService } from "../application/post/service/createPost.service";
+import { CreatePostRequestDto } from "../application/post/dto/createPost.dto";
 
 
 // c.getで取得するパラメータの型
@@ -22,6 +24,8 @@ type Variables = {
 }
 
 const post = new Hono<{ Variables: Variables }>().basePath("/posts");
+
+// エラーハンドリング
 post.onError((error: any, c) => {
   if (error instanceof ValidationError) {
     return c.json({ message: String(error.message) }, HttpStatus.BAD_REQUEST);
@@ -40,9 +44,21 @@ const postRepository = new PostRepository();
 const postQueryService = new PostQueryService(postRepository);
 const userQueryService = new UserQueryService(userRepository);
 
-post.post("/", (c) => {
-  return c.json({ message: "post created" }, HttpStatus.CREATED);
-});
+post.post("/", async (c) => {
+  const userId = c.get('userId');
+  if (!userId) {
+    return c.json({ message: "userId is required" }, HttpStatus.BAD_REQUEST);
+  }
+  const body = await c.req.json()
+  const { title, price } = body;
+
+  const createPostRequestDto = new CreatePostRequestDto(title, price, userId);
+  const createPostService = new CreatePostService(postRepository);
+
+  const result = await createPostService.execute(createPostRequestDto);
+
+  return c.json(result, HttpStatus.CREATED);
+})
 
 post.post("/likes", async (c) => {
   const body = await c.req.json();
@@ -51,9 +67,7 @@ post.post("/likes", async (c) => {
   const postLikeService = new PostLikeService(postRepository)
   await postLikeService.toggleLike(likePostRequestDto);
   return c.json({ message: "" }, HttpStatus.OK);
-}).onError((error: any, c) => {
-  return c.json({ message: "いいねに失敗しました。" }, HttpStatus.INTERNAL_SERVER_ERROR);
-});
+})
 
 post.post("/comments", async (c) => {
   // ユーザーのコメントを作成する
