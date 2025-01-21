@@ -86,7 +86,9 @@ post.post("/comments", async (c) => {
 });
 
 // みんなの投稿
-post.get("/", async (c) => {
+post.get("/?user_id=", async (c) => {
+  // サーチパラメータからユーザーIDを取得
+  // ユーザーIDはオプショナル
   const getUserPostService = new GetUserPostService(postQueryService, userQueryService);
   const results = await getUserPostService.getAllPost();
   return c.json(results, HttpStatus.OK);

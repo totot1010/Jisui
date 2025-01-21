@@ -11,6 +11,7 @@ export class GetUserPostService {
   ) { }
 
   public async getAllPostByUser(getUserPostRequestDto: GetUserPostRequestDto): Promise<GetUserPostResponseDto[]> {
+    // userIDで処理を分岐
     const userId: string = getUserPostRequestDto.userId;
     const posts: Post[] = await this.postQueryService.findAllByUserId(userId);
     const users: User[] = await this.userQueryService.findAll();
@@ -39,7 +40,7 @@ export class GetUserPostService {
   }
 
   public async getAllPost(): Promise<GetUserPostResponseDto[]> {
-    const posts: Post[] = await this.postQueryService.findAll();
+    const posts: Post[] = await this.postQueryService.findAll(userId);
     const users: User[] = await this.userQueryService.findAll();
 
     const result: GetUserPostResponseDto[] = [];
