@@ -32,7 +32,7 @@ describe('GetAllPostWithUserService', () => {
       ]);
 
       // when
-      const posts = await getAllPostWithUserService.execute();
+      const posts = await getAllPostWithUserService.execute(undefined);
 
       // then
       expect(posts).toHaveLength(2);

@@ -30,9 +30,14 @@ export class PostRepository implements IPostRepository {
     return Post.reConstruct(id, title, price, userId, createdAt, updatedAt, []);
   }
 
-  async findAll(): Promise<Post[]> {
+  async findAll(userId: string | undefined): Promise<Post[]> {
     const client = this.getClient();
+    const where: Prisma.PostWhereInput = {}
+    if (userId) {
+      where.userId = userId
+    }
     const posts = await client.post.findMany({
+      where,
       include: {
         likes: {
           select: {
