@@ -10,8 +10,8 @@ export class GetAllPostWithUserService {
     private readonly userQueryService: UserQueryService
   ) { }
 
-  public async execute(): Promise<getAllPostWithUserDto[]> {
-    const posts: Post[] = await this.postQueryService.findAll();
+  public async execute(userId: string | undefined): Promise<getAllPostWithUserDto[]> {
+    const posts: Post[] = await this.postQueryService.findAll(userId);
     const users: User[] = await this.userQueryService.findAll();
 
     const result: getAllPostWithUserDto[] = [];

@@ -86,8 +86,9 @@ post.post("/comments", async (c) => {
 
 // みんなの投稿
 post.get("/", async (c) => {
+  const userId: string | undefined = c.req.query('userId')
   const getAllPostWithUserService = new GetAllPostWithUserService(postQueryService, userQueryService);
-  const results = await getAllPostWithUserService.execute();
+  const results = await getAllPostWithUserService.execute(userId);
   return c.json(results, HttpStatus.OK);
 });
 
