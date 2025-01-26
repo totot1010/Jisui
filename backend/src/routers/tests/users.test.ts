@@ -3,9 +3,6 @@ import user from "../users";
 import { transactionTest } from "../../infrastructure/repository/test/transactionTest";
 import { UserRepository } from "../../infrastructure/repository/user.repository";
 import { createUserAndGetToken } from "./authTestHelpers";
-import { CreateUserRequestDto } from "../../application/user/dto/createUser.dto";
-import { UserCreateService } from "../../application/user/service/userCreate.service";
-import { CheckUserDuplicationDomainService } from "../../domain/user/service/checkUserDuplication.domainService";
 
 describe("users", () => {
   describe("POST /users", () => {
