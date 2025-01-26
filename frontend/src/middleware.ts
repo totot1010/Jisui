@@ -10,19 +10,15 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next()
   }
 
-  console.log("middleware");
-
   const accessToken = request.cookies.get('accessToken')?.value
   const refreshToken = request.cookies.get('refreshToken')?.value
 
   if (!accessToken && !refreshToken) {
     return handleLogout(request)
   }
-  console.log("accessToken is not valid");
 
   if (accessToken) {
     try {
-      console.log("accessToken is valid");
       const exp = decodeJwtTokenExp(accessToken)
       if (exp && exp > Date.now() / 1000) {
         return NextResponse.next()
@@ -36,7 +32,6 @@ export async function middleware(request: NextRequest) {
     // アクセストークンが無効な場合、リフレッシュトークンを使用して新しいアクセストークンを取得
     if (refreshToken) {
       try {
-        console.log("refreshToken is valid");
         const response = NextResponse.next()
         const newAccessTokenResponse = await refreshAccessToken(refreshToken)
         if (isApiError(newAccessTokenResponse)) {
@@ -44,7 +39,6 @@ export async function middleware(request: NextRequest) {
           return handleLogout(request)
         }
 
-        console.log("newAccessTokenResponse", newAccessTokenResponse);
         response.cookies.set('accessToken', newAccessTokenResponse.data.accessToken, {
           httpOnly: true,
           secure: true,
