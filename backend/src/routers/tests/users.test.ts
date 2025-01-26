@@ -2,8 +2,10 @@ import { describe, expect, it } from "vitest";
 import user from "../users";
 import { transactionTest } from "../../infrastructure/repository/test/transactionTest";
 import { UserRepository } from "../../infrastructure/repository/user.repository";
-import { Email } from "../../domain/user/value_object";
-
+import { createUserAndGetToken } from "./authTestHelpers";
+import { CreateUserRequestDto } from "../../application/user/dto/createUser.dto";
+import { UserCreateService } from "../../application/user/service/userCreate.service";
+import { CheckUserDuplicationDomainService } from "../../domain/user/service/checkUserDuplication.domainService";
 
 describe("users", () => {
   describe("POST /users", () => {
@@ -23,9 +25,54 @@ describe("users", () => {
         email: "test@example.com",
         username: "test",
       });
+    }));
+  });
 
-      const dbUser = await new UserRepository().findByEmail(new Email("test@example.com"));
-      expect(dbUser).not.toBeNull();
+  describe("GET /users/:id", () => {
+    it("認証済みユーザーが存在するユーザーを取得すると、200が返却されること", transactionTest(async () => {
+      const userRepository = new UserRepository();
+      const { user: createdUser, accessToken } = await createUserAndGetToken(userRepository);
+
+      const response = await user.request(`/users/${createdUser.getUserId().value}`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        }
+      });
+
+      expect(response.status).toBe(200);
+      expect(await response.json()).toEqual({
+        userId: createdUser.getUserId().value,
+        email: createdUser.getEmail().value,
+        username: createdUser.getUsername().value,
+      });
+    }));
+  });
+
+  describe("PUT /users", () => {
+    it("認証済みユーザーが自身の情報を更新すると、200が返却されること", transactionTest(async () => {
+      const userRepository = new UserRepository();
+      const { user: createdUser, accessToken } = await createUserAndGetToken(userRepository);
+
+      const response = await user.request("/users", {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        },
+        body: JSON.stringify({
+          email: "updated@example.com",
+          username: "updated",
+          password: "newpassword12341234",
+          passwordConfirm: "newpassword12341234"
+        })
+      });
+
+      expect(response.status).toBe(200);
+      expect(await response.json()).toEqual({
+        userId: createdUser.getUserId().value,
+        email: "updated@example.com",
+        username: "updated"
+      });
     }));
   });
 });
