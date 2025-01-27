@@ -6,8 +6,8 @@ import { UserId } from "../../../domain/user/value_object";
 export class PostQueryService {
   constructor(private readonly postRepository: IPostRepository) { }
 
-  async findAll(userId: string | undefined): Promise<Post[]> {
-    return await this.postRepository.findAll(userId);
+  async findAll(userId: string | undefined, startDate: Date | undefined = undefined, endDate: Date | undefined = undefined): Promise<Post[]> {
+    return await this.postRepository.findAll(userId, startDate, endDate);
   }
 
   async countByUserIdAndType(userId: string, type: PostCountType): Promise<number> {
