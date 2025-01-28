@@ -128,7 +128,6 @@ post.get("/users/:userId/history", async (c) => {
 
   const getUserPostHistoryService = new GetUserPostHistoryService(postQueryService)
   const results = await getUserPostHistoryService.execute(userId, startDate, endDate);
-  console.log(results)
   return c.json(results, HttpStatus.OK);
 });
 
