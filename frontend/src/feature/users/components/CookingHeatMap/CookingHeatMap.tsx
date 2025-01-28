@@ -1,66 +1,55 @@
-'use client';
-
-import React, { ReactNode, useEffect, useState } from "react";
+import { ApiClient } from "@/api/api";
+import { isApiError } from "@/api/types";
 
 type CookingHeatMapProps = {
-  userId: string
-}
+  userId: string;
+};
 
-export const CookingHeatMap = ({  }: CookingHeatMapProps) => {
-  // TODO: ユーザーの料理履歴を取得する
-  const [weeks, setWeeks] = useState<ReactNode[]>([]);
+export const CookingHeatMap = async ({ userId }: CookingHeatMapProps) => {
+  const response = await ApiClient().Get<{ startDate: string, endDate: string }, { userPostHistory: { date: string, count: number }[] }>(
+    `posts/users/${userId}/history`,
+    {
+      startDate: new Date(new Date().setFullYear(new Date().getFullYear() - 1)).toISOString(),
+      endDate: new Date().toISOString(),
+    }
+  );
 
-  useEffect(() => {
-    // ハイドレーションエラー回避のため
-      const cookingHistory = generateYearlyCookingData();
+  if (isApiError(response)) {
+    return <p className="text-3xl font-bold text-red-500">{response.message || "エラーが発生しました"}</p>;
+  }
 
-      // 週ごとに分割
-      const temporaryWeeks: ReactNode[] = [];
-      for (let i = 0; i < 53; i++) {
-        temporaryWeeks.push(
-          <div key={i} className="grid grid-rows-7 gap-1">
-            {[0, 1, 2, 3, 4, 5, 6].map(day => {
-              const index = i * 7 + day;
-              const data = index < cookingHistory.length ? cookingHistory[index] : null;
-              return (
-                <div
-                  key={day}
-                  className={`w-3 h-3 rounded-sm ${data ? getColor(data.count) : 'bg-gray-100'}`}
-                  title={data ? `${data.date.toISOString().split('T')[0]}: ${data.count}回` : ''}
-                />
-              );
-            })}
-          </div>
-        );
-      }
-      setWeeks(temporaryWeeks);
-    }, [setWeeks]);
+  const cookingHistory = response.data.userPostHistory;
 
   return (
     <div className="flex space-x-1 overflow-x-auto pb-4">
-      {weeks}
+      {Array.from({ length: 53 }).map((_, i) => (
+        <div key={i} className="grid grid-rows-7 gap-1">
+          {[0, 1, 2, 3, 4, 5, 6].map((day) => {
+            const index = i * 7 + day;
+            const data = cookingHistory[index];
+            if (!data) {
+              return (
+                // 今日を最新にしたいため、未来の日付となる要素は表示しない
+                <></>
+              )
+            }
+            return (
+              <div
+                key={day}
+                className={`w-3 h-3 rounded-sm ${data ? getColor(data.count) : "bg-gray-100"}`}
+                title={`${new Date(data?.date || "").toLocaleDateString()}: ${data?.count || 0}回`}
+              />
+            );
+          })}
+        </div>
+      ))}
     </div>
-  )
+  );
 }
 
 const getColor = (count: number) => {
-  if (count === 0) return 'bg-gray-100'
-  if (count === 1) return 'bg-orange-200'
-  if (count === 2) return 'bg-orange-300'
-  return 'bg-orange-400'
-}
-
-const generateYearlyCookingData = () => {
-  const today = new Date()
-  const oneYearAgo = new Date(today.getFullYear() - 1, today.getMonth(), today.getDate())
-  const data = []
-
-  for (let d = new Date(oneYearAgo); d <= today; d.setDate(d.getDate() + 1)) {
-    data.push({
-      date: new Date(d),
-      count: Math.floor(Math.random() * 4) // 0-3のランダムな回数
-    })
-  }
-
-  return data
-}
+  if (count === 0) return "bg-gray-100";
+  if (count === 1) return "bg-orange-200";
+  if (count === 2) return "bg-orange-300";
+  return "bg-orange-400";
+};
