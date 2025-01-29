@@ -15,6 +15,7 @@ import { ValidationError } from "../shared/exceptions/validationError";
 import { HTTPException } from "hono/http-exception";
 import { CreatePostService } from "../application/post/service/createPost.service";
 import { CreatePostRequestDto } from "../application/post/dto/createPost.dto";
+import { GetUserPostHistoryService } from "../application/post/service/getUserPostHistory.service";
 
 
 // c.getで取得するパラメータの型
@@ -114,6 +115,20 @@ post.get("/:userId/counts", async (c) => {
 
   const postCount = await postQueryService.countByUserIdAndType(userId, type);
   return c.json({ count: postCount }, HttpStatus.OK);
+});
+
+post.get("/users/:userId/history", async (c) => {
+  const userId = c.req.param('userId')
+  const startDateStr = c.req.query('startDate')
+  const endDateStr = c.req.query('endDate')
+
+  // ない場合は1年分
+  const startDate = startDateStr ? new Date(startDateStr) : new Date((new Date().getFullYear() - 1));
+  const endDate = endDateStr ? new Date(endDateStr) : new Date();
+
+  const getUserPostHistoryService = new GetUserPostHistoryService(postQueryService)
+  const results = await getUserPostHistoryService.execute(userId, startDate, endDate);
+  return c.json(results, HttpStatus.OK);
 });
 
 post.delete("/", (c) => {
