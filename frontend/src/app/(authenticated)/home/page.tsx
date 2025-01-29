@@ -15,7 +15,7 @@ export default function Page() {
                 <PostListSkelton key={i} />
               ))
             }>
-              <AllPostList />
+              <AllPostList userId={undefined}/>
             </Suspense>
           </main>
         </div>

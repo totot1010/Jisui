@@ -5,7 +5,11 @@ import { PostCard } from "../PostCard";
 import { cookies } from "next/headers";
 import { RevalidateTag } from "@/constants/revalidateTag";
 
-export const AllPostList = async () => {
+type AllPostListProps = {
+  userId: string | undefined;
+}
+
+export const AllPostList = async ({userId}: AllPostListProps) => {
   const cookieStore = await cookies();
   const loginUserId = cookieStore.get('userId')?.value;
 
@@ -14,7 +18,8 @@ export const AllPostList = async () => {
     throw new Error('userIdが取得できませんでした');
   }
 
-  const response = await ApiClient().Get<undefined, Post[]>('posts', undefined, true, { next: { tags: [RevalidateTag.GetAllPostList] } });
+  const path = userId ? `posts?userId=${userId}` : 'posts';
+  const response = await ApiClient().Get<undefined, Post[]>(path, undefined, true, { next: { tags: [RevalidateTag.GetAllPostList] } });
   if (isApiError(response)) {
     return <div>{response.message}</div>;
   }
