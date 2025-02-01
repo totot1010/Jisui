@@ -44,6 +44,10 @@ const postRepository = new PostRepository();
 const postQueryService = new PostQueryService(postRepository);
 const userQueryService = new UserQueryService(userRepository);
 
+
+/**
+ * 投稿の作成
+ */
 post.post("/", async (c) => {
   const userId = c.get('userId');
   if (!userId) {
@@ -60,6 +64,9 @@ post.post("/", async (c) => {
   return c.json(result, HttpStatus.CREATED);
 })
 
+/**
+ * 投稿のいいね
+ */
 post.post("/likes", async (c) => {
   const body = await c.req.json();
   const { userId, postId } = body;
@@ -69,6 +76,9 @@ post.post("/likes", async (c) => {
   return c.json({ message: "" }, HttpStatus.OK);
 })
 
+/**
+ * 投稿のコメント作成
+ */
 post.post("/comments", async (c) => {
   // ユーザーのコメントを作成する
   const userId = c.get('userId');
@@ -85,7 +95,9 @@ post.post("/comments", async (c) => {
   return c.json({ message: "comment created" }, HttpStatus.CREATED);
 });
 
-// みんなの投稿
+/**
+ * 投稿の取得
+ */
 post.get("/", async (c) => {
   const userId: string | undefined = c.req.query('userId')
   const getAllPostWithUserService = new GetAllPostWithUserService(postQueryService, userQueryService);
@@ -103,6 +115,9 @@ post.get("/:userId", (c) => {
   return c.json({ message: `post with userId ${userId}` }, HttpStatus.OK);
 });
 
+/**
+ * ユーザーの投稿数の取得
+ */
 post.get("/:userId/counts", async (c) => {
   const userId = c.req.param('userId')
   const type = c.req.query('type')
@@ -117,6 +132,9 @@ post.get("/:userId/counts", async (c) => {
   return c.json({ count: postCount }, HttpStatus.OK);
 });
 
+/**
+ * ユーザー投稿の履歴の取得
+ */
 post.get("/users/:userId/history", async (c) => {
   const userId = c.req.param('userId')
   const startDateStr = c.req.query('startDate')
