@@ -1,10 +1,10 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { GetUserPostHistoryService } from '../getUserPostHistory.service';
-import { PostQueryService } from '../postQuery.service';
-import { Post } from '../../../../domain/post/entity/post.entity';
-import { getUserPostHistoryResponseDto } from '../../dto/getUserPostHistory.dto';
-import { PostId, Price, Title } from '../../../../domain/post/value_object';
-import { UserId } from '../../../../domain/user/value_object';
+import { GetUserPostHistoryService } from '../service/getUserPostHistory.service';
+import { PostQueryService } from '../service/postQuery.service';
+import { Post } from '../../../domain/post/entity/post.entity';
+import { getUserPostHistoryResponseDto } from '../dto/getUserPostHistory.dto';
+import { PostId, Price, Title } from '../../../domain/post/value_object';
+import { UserId } from '../../../domain/user/value_object';
 
 // PostQueryServiceのモック
 vi.mock('../postQuery.service');

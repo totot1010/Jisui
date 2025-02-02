@@ -3,15 +3,17 @@ import { CreatePostService } from '../service/createPost.service';
 import { PostFakeRepository } from '../../../infrastructure/repository/post.fakeRepository';
 import { CreatePostRequestDto } from '../dto/createPost.dto';
 import { v4 as uuidv4 } from 'uuid';
+import { PostImageFakeRepository } from '../../../infrastructure/repository/postImage.fakeRepository';
 
 describe('CreatePostService', () => {
-  const createPostService = new CreatePostService(new PostFakeRepository());
+  const createPostService = new CreatePostService(new PostFakeRepository(), new PostImageFakeRepository());
   it('正常に投稿を作成できること', async () => {
     const validUserId = uuidv4();
     const createPostDto: CreatePostRequestDto = {
       title: 'テスト投稿',
       price: 1000,
-      userId: validUserId
+      userId: validUserId,
+      file: null
     };
 
     const result = await createPostService.execute(createPostDto);
@@ -30,7 +32,8 @@ describe('CreatePostService', () => {
     const createPostDto: CreatePostRequestDto = {
       title: '',
       price: 1000,
-      userId: validUserId
+      userId: validUserId,
+      file: null
     };
 
     await expect(createPostService.execute(createPostDto)).rejects.toThrow();
@@ -41,7 +44,8 @@ describe('CreatePostService', () => {
     const createPostDto: CreatePostRequestDto = {
       title: 'テスト投稿',
       price: -1000,
-      userId: validUserId
+      userId: validUserId,
+      file: null
     };
 
     await expect(createPostService.execute(createPostDto)).rejects.toThrow();
