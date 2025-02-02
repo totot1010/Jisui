@@ -16,6 +16,8 @@ import { HTTPException } from "hono/http-exception";
 import { CreatePostService } from "../application/post/service/createPost.service";
 import { CreatePostRequestDto } from "../application/post/dto/createPost.dto";
 import { GetUserPostHistoryService } from "../application/post/service/getUserPostHistory.service";
+import { withTransaction } from "../infrastructure/prisma/withTransaction";
+import { PostImageRepositoryLocal } from "../infrastructure/repository/postImage.repository.local";
 
 
 // c.getで取得するパラメータの型
@@ -33,6 +35,7 @@ post.onError((error: any, c) => {
   if (error instanceof HTTPException) {
     return error.getResponse();
   }
+  console.error(error);
   return c.json({ message: "Internal Server Error" }, HttpStatus.INTERNAL_SERVER_ERROR);
 });
 
@@ -49,13 +52,23 @@ post.post("/", async (c) => {
   if (!userId) {
     return c.json({ message: "userId is required" }, HttpStatus.BAD_REQUEST);
   }
-  const body = await c.req.json()
-  const { title, price } = body;
 
-  const createPostRequestDto = new CreatePostRequestDto(title, price, userId);
-  const createPostService = new CreatePostService(postRepository);
+  const body = await c.req.parseBody();
+  const file = body['image'] as File | null
+  const title = body['title'] as string
+  const price = Number(body['price'])
 
-  const result = await createPostService.execute(createPostRequestDto);
+  console.log(file, title, price);
+
+  const postImageRepository = new PostImageRepositoryLocal()
+
+  const createPostRequestDto = new CreatePostRequestDto(title, price, userId, file);
+  const createPostService = new CreatePostService(postRepository, postImageRepository);
+
+  const result = await withTransaction(async () => {
+    const result = await createPostService.execute(createPostRequestDto);
+    return result;
+  })
 
   return c.json(result, HttpStatus.CREATED);
 })
