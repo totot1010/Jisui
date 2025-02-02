@@ -82,13 +82,26 @@ const request = async <RequestType = undefined, ResponseType = unknown>(
 		credentials: "include",
 		mode: "cors",
 		headers: {
-			"Content-Type": "application/json",
 			"Authorization": auth ? `Bearer ${accessToken}` : "",
-		},
+		}
 	};
 
+	// リクエストがFormData以外の場合はContent-Typeをapplication/jsonに設定
+	if (params && !(params instanceof FormData)) {
+		options.headers = {
+			...options.headers,
+			"Content-Type": "application/json",
+		}
+	}
+
 	if (method !== "GET" && params) {
-		options.body = JSON.stringify(params);
+		if (params instanceof FormData) {
+			// FormDataの場合はそのまま設定
+			options.body = params;
+		} else {
+			// FormData以外の場合はJSON形式に変換
+			options.body = JSON.stringify(params);
+		}
 	}
 
 	if (method === "GET" && nextOptions) {
