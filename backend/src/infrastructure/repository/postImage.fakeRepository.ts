@@ -2,11 +2,6 @@ import { IPostImageRepository } from "../../domain/post/repository/postImage.rep
 import { PostId } from "../../domain/post/value_object";
 
 export class PostImageFakeRepository implements IPostImageRepository {
-  /*
-  ローカルでファイルを保存する
-  ファイルの保存先はupload/postImage/
-  */
-
   async upload(file: File): Promise<string> {
     return 'https://example.com/image.jpg';
   }
