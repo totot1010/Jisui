@@ -36,6 +36,9 @@ user.onError((error: any, c) => {
 const userRepository = new UserRepository();
 const checkUserDuplicationDomainService = new CheckUserDuplicationDomainService(userRepository);
 
+/**
+ * ユーザーの作成
+ */
 user.post("/", async (c) => {
   const userCreateService = new UserCreateService(userRepository, checkUserDuplicationDomainService);
 
@@ -55,6 +58,9 @@ user.post("/", async (c) => {
 // ここから下は認証が必要
 user.use(requiredAuth);
 
+/**
+ * ユーザーの取得
+ */
 user.get("/:id", async (c) => {
   const id = c.req.param('id')
   const userQueryService = new UserQueryService(userRepository);
@@ -63,6 +69,9 @@ user.get("/:id", async (c) => {
   return c.json(user, HttpStatus.OK);
 });
 
+/**
+ * ユーザーの更新
+ */
 user.put("/", async (c) => {
   const userId = c.get("userId");
 

@@ -11,6 +11,10 @@ const userRepository = new UserRepository();
 const tokenService = new TokenService();
 const loginService = new LoginService(userRepository, tokenService);
 
+
+/**
+ * ログイン
+ */
 auth.post("/login", async (c) => {
   const body = await c.req.json();
   const { email, password } = body;
@@ -27,6 +31,9 @@ auth.post("/login", async (c) => {
   return c.json({ message: "" }, HttpStatus.INTERNAL_SERVER_ERROR);
 });
 
+/**
+ * トークンの更新
+ */
 auth.post("/refresh", async (c) => {
   const body = await c.req.json();
   const { refreshToken } = body;
