@@ -1,14 +1,15 @@
 import { Post } from "../../../domain/post/entity/post.entity";
 import { IPostRepository } from "../../../domain/post/repository/post.repository";
+import { IPostImageRepository } from "../../../domain/post/repository/postImage.repository";
 import { PostId, Price, Title } from "../../../domain/post/value_object";
 import { UserId } from "../../../domain/user/value_object";
 import { CreatePostRequestDto, CreatePostResponseDto } from "../dto/createPost.dto";
 
 export class CreatePostService {
-  constructor(private postRepository: IPostRepository) { }
+  constructor(private postRepository: IPostRepository, private postImageRepository: IPostImageRepository) { }
 
   async execute(createPostRequestDto: CreatePostRequestDto): Promise<CreatePostResponseDto> {
-    const { title, price, userId } = createPostRequestDto;
+    const { title, price, userId, file } = createPostRequestDto;
     const post = new Post(
       PostId.generate(),
       new Title(title),
@@ -21,6 +22,7 @@ export class CreatePostService {
     );
 
     const result = await this.postRepository.create(post);
+    const imageUrl = file ? await this.postImageRepository.upload(file, result.getPostId()) : null;
 
     return new CreatePostResponseDto(
       result.getPostId().value,
@@ -28,7 +30,8 @@ export class CreatePostService {
       result.getPrice().value,
       result.getUserId().value,
       result.getCreatedAt(),
-      result.getUpdatedAt()
+      result.getUpdatedAt(),
+      imageUrl
     );
   }
 }

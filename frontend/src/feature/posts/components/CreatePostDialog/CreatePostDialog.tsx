@@ -18,6 +18,7 @@ export type CreatePostDialogProps = {
 export const CreatePostDialog = ({ open, onClose }: CreatePostDialogProps) => {
   const [title, setTitle] = useState('')
   const [price, setPrice] = useState('')
+  const [image, setImage] = useState<File | null>(null)
   const [isLoading, setIsLoading] = useState(false)
 
   const handleSubmit = async () => {
@@ -25,7 +26,13 @@ export const CreatePostDialog = ({ open, onClose }: CreatePostDialogProps) => {
 
     setIsLoading(true)
     try {
-      const response = await createPost({ title, price: Number(price) })
+      const formData = new FormData();
+      formData.append('title', title);
+      formData.append('price', price);
+      if (image) {
+        formData.append('image', image);
+      }
+      const response = await createPost(formData)
       if (response && isApiError(response)) {
         toast({
           variant: "destructive",
@@ -69,6 +76,16 @@ export const CreatePostDialog = ({ open, onClose }: CreatePostDialogProps) => {
               onChange={(e) => setPrice(e.target.value)}
               required
               disabled={isLoading}
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="image">画像</Label>
+            <Input
+              id="image"
+              type="file"
+              accept="image/png, image/jpeg"
+              onChange={(e) => setImage(e.target.files?.[0] ?? null)}
+              required
             />
           </div>
         </div>
