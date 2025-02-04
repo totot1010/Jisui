@@ -10,8 +10,6 @@ export const createPost = async (request: FormData): Promise<ApiResponse<void> |
   const price = Number(request.get('price'));
   const image = request.get('image') as File | null;
 
-  console.log(title, price, image)
-
   const formData = new FormData();
   formData.append('title', title);
   formData.append('price', price.toString());

@@ -58,8 +58,6 @@ post.post("/", async (c) => {
   const title = body['title'] as string
   const price = Number(body['price'])
 
-  console.log(file, title, price);
-
   const postImageRepository = new PostImageRepositoryLocal()
 
   const createPostRequestDto = new CreatePostRequestDto(title, price, userId, file);
