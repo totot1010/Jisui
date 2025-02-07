@@ -13,7 +13,7 @@ export const useLogin = () => {
     const response = await login({ email, password });
     // レスポンスが存在する時はエラーのケース
     if (response) {
-      setError(response.message);
+      setError(response.message ?? "ログインに失敗しました");
     }
   };
 
