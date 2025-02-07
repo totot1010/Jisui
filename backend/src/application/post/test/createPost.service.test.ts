@@ -4,9 +4,10 @@ import { PostFakeRepository } from '../../../infrastructure/repository/post.fake
 import { CreatePostRequestDto } from '../dto/createPost.dto';
 import { v4 as uuidv4 } from 'uuid';
 import { PostImageFakeRepository } from '../../../infrastructure/repository/postImage.fakeRepository';
+import { fakeTransactionManager } from '../../transaction/fakeTransactionManager';
 
 describe('CreatePostService', () => {
-  const createPostService = new CreatePostService(new PostFakeRepository(), new PostImageFakeRepository());
+  const createPostService = new CreatePostService(new PostFakeRepository(), new PostImageFakeRepository(), fakeTransactionManager);
   it('正常に投稿を作成できること', async () => {
     const validUserId = uuidv4();
     const createPostDto: CreatePostRequestDto = {

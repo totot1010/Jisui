@@ -18,6 +18,7 @@ import { CreatePostRequestDto } from "../application/post/dto/createPost.dto";
 import { GetUserPostHistoryService } from "../application/post/service/getUserPostHistory.service";
 import { withTransaction } from "../infrastructure/prisma/withTransaction";
 import { PostImageRepositoryLocal } from "../infrastructure/repository/postImage.repository.local";
+import { transactionManager } from "../infrastructure/prisma/transactionManager";
 
 
 // c.getで取得するパラメータの型
@@ -65,12 +66,9 @@ post.post("/", async (c) => {
   const postImageRepository = new PostImageRepositoryLocal()
 
   const createPostRequestDto = new CreatePostRequestDto(title, price, userId, file);
-  const createPostService = new CreatePostService(postRepository, postImageRepository);
+  const createPostService = new CreatePostService(postRepository, postImageRepository, transactionManager);
 
-  const result = await withTransaction(async () => {
-    const result = await createPostService.execute(createPostRequestDto);
-    return result;
-  })
+  const result = await createPostService.execute(createPostRequestDto);
 
   return c.json(result, HttpStatus.CREATED);
 })
