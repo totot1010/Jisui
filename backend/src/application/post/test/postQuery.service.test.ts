@@ -10,7 +10,7 @@ describe('PostQueryService', () => {
   describe('findAll', async () => {
     it('全ての投稿が取得できること', async () => {
       // when
-      const posts = await postQueryService.findAll();
+      const posts = await postQueryService.findAll(undefined);
 
       const [post1, post2] = posts;
       // then
