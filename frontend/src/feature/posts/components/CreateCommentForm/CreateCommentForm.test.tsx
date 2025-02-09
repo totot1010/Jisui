@@ -1,6 +1,5 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
-import { Post } from '../../types';
 import { CreateCommentForm } from './CreateCommentForm';
 import * as createCommentModule from '@/feature/posts/actions/createComment';
 import { toast } from '@/hooks/use-toast';
